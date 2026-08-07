@@ -1,0 +1,195 @@
+:root {
+  --bg: #0b1020;
+  --panel: #141b32;
+  --panel-2: #1b2444;
+  --ink: #e7ecff;
+  --muted: #8a95c0;
+  --accent: #6ce0ff;
+  --accent-2: #b58bff;
+  --ok: #3ad29f;
+  --bad: #ff6b8b;
+  --warn: #ffcf6b;
+  --line: #263056;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Neon phone booth backdrop, layered over the Circuits of Time glow. The booth
+     SVG is transparent, so the gradient shows through it. */
+  background:
+    url("/static/phonebooth.svg") no-repeat right -16px bottom -8px / auto min(80vh, 520px),
+    radial-gradient(1200px 600px at 70% -10%, #1a2450 0%, var(--bg) 55%);
+  background-attachment: fixed, fixed;
+  background-color: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* Keep the booth from crowding the cards on small screens. */
+@media (max-width: 720px) {
+  body { background-size: auto 42vh, auto; opacity: 1; }
+}
+
+header {
+  text-align: center;
+  padding: 2.2rem 1rem 0.4rem;
+}
+header h1 { margin: 0; font-size: 2.2rem; letter-spacing: 0.5px; }
+.tag { color: var(--muted); margin: 0.3rem 0 0; }
+
+main {
+  max-width: 640px;
+  margin: 1.5rem auto 3rem;
+  padding: 0 1rem;
+}
+.card.narrow {
+  max-width: 520px;
+  margin: 1.5rem auto 3rem;
+}
+.hidden { display: none !important; }
+
+.whoami {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.whoami .who { display: flex; align-items: center; gap: 0.6rem; }
+.whoami strong { color: var(--ink); }
+.whoami .role,
+.whoami .plan {
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(108, 224, 255, 0.16);
+  color: var(--accent);
+  font-weight: 700;
+}
+.whoami .plan { background: rgba(181, 139, 255, 0.18); color: var(--accent-2); }
+.whoami #logout { margin-left: auto; }
+
+/* JWT reveal + copy */
+.jwt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+.jwt-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+.jwt code {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  background: #0d1430;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  color: var(--ink);
+}
+.jwt .ghost { margin: 0; flex: none; }
+
+.card {
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.3rem 1.3rem 1.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+.card h2 { margin: 0 0 1rem; font-size: 1.2rem; }
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.7rem 0 0;
+}
+input[type="text"], select {
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: #0d1430;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+input[type="text"]:focus, select:focus { outline: 1px solid var(--accent); }
+
+label.checkbox { display: flex; align-items: center; gap: 0.55rem; color: var(--ink); }
+label.checkbox { margin-top: 0.9rem; font-size: 0.9rem; }
+label.checkbox input { width: auto; }
+
+hr { border: none; border-top: 1px solid var(--line); margin: 1.1rem 0; }
+
+.hint { color: var(--muted); font-size: 0.82rem; margin: 0.4rem 0 0; }
+
+button {
+  margin-top: 1.2rem;
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: #0b1020;
+  font-weight: 700;
+  font-size: 0.98rem;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.08); }
+button:disabled { opacity: 0.5; cursor: default; }
+button.ghost {
+  width: auto; margin: 0; padding: 0.4rem 0.8rem;
+  background: transparent; color: var(--accent); border: 1px solid var(--line); font-weight: 600;
+}
+
+.result {
+  margin-top: 1.1rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  border: 1px solid var(--line);
+  background: #0d1430;
+  white-space: pre-wrap;
+}
+.result.hidden { display: none; }
+.result .badge {
+  display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+.b-ok { background: rgba(58, 210, 159, 0.18); color: var(--ok); }
+.b-bad { background: rgba(255, 107, 139, 0.18); color: var(--bad); }
+.b-warn { background: rgba(255, 207, 107, 0.18); color: var(--warn); }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); font-size: 0.8rem; }
+
+.review-head { display: flex; align-items: center; justify-content: space-between; }
+.reviewer { margin-bottom: 0.6rem; }
+
+.trip {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 0.85rem 0.9rem;
+  margin-top: 0.7rem;
+  background: #0d1430;
+}
+.trip .dest { font-weight: 700; }
+.trip .meta { color: var(--muted); font-size: 0.82rem; margin: 0.25rem 0 0.7rem; }
+.trip .reason { color: var(--warn); font-size: 0.83rem; margin: 0.3rem 0 0.7rem; }
+.trip .actions { display: flex; gap: 0.6rem; }
+.trip .actions button { margin: 0; padding: 0.5rem; font-size: 0.85rem; }
+.trip .approve { background: linear-gradient(90deg, #3ad29f, #6ce0ff); }
+.trip .reject { background: linear-gradient(90deg, #ff6b8b, #b58bff); }
+.empty { color: var(--muted); font-size: 0.85rem; margin-top: 0.8rem; }
+.result .waiting { color: var(--warn); font-size: 0.85rem; margin-top: 0.55rem; }

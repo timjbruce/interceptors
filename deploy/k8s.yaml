@@ -1,0 +1,174 @@
+# Interceptors demo — self-contained Kubernetes manifests.
+#
+#     kubectl apply -f deploy/k8s.yaml
+#
+# Everything the demo needs, with no external chart: a namespace, three Deployments
+# (all running the SAME image, differing only in their command), and two ClusterIP
+# Services. Temporal itself is NOT here — see deploy/README.md for getting a server
+# into the cluster first.
+#
+# Assumes the image `interceptors:local` is already loaded into the cluster:
+#     ./deploy/build.sh
+#
+# TEMPORAL_ADDRESS below points at the frontend Service created by Temporal's own
+# Helm chart when installed as release `temporal` in namespace `temporal`. If you
+# installed it differently, change it in both the worker and web Deployments.
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: interceptors
+---
+# JWT-authorized backend: the resource server the activities call, and the token
+# endpoint they redeem the delegation grant at. No Temporal client, so it needs
+# neither TEMPORAL_ADDRESS nor ENCRYPT_PAYLOADS.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: interceptors-backend
+  namespace: interceptors
+  labels:
+    app.kubernetes.io/name: interceptors
+    app.kubernetes.io/component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: interceptors
+      app.kubernetes.io/component: backend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: interceptors
+        app.kubernetes.io/component: backend
+    spec:
+      containers:
+        - name: backend
+          image: interceptors:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "uvicorn", "backend.service:app",
+                    "--host", "0.0.0.0", "--port", "9000"]
+          ports:
+            - containerPort: 9000
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { memory: 256Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: interceptors-backend
+  namespace: interceptors
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: interceptors
+    app.kubernetes.io/component: backend
+  ports:
+    - port: 9000
+      targetPort: 9000
+---
+# Temporal worker: runs the workflow and five of the six interceptors. No HTTP
+# server, so no Service.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: interceptors-worker
+  namespace: interceptors
+  labels:
+    app.kubernetes.io/name: interceptors
+    app.kubernetes.io/component: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: interceptors
+      app.kubernetes.io/component: worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: interceptors
+        app.kubernetes.io/component: worker
+    spec:
+      containers:
+        - name: worker
+          image: interceptors:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "workflows.worker"]
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal-frontend.temporal.svc.cluster.local:7233
+            - name: TEMPORAL_NAMESPACE
+              value: default
+            # In-cluster address of the backend Service above. Used for the
+            # activities' backend calls and for the token exchange.
+            - name: BACKEND_URL
+              value: http://interceptors-backend:9000
+            # Must match the web Deployment — both encrypt and decrypt the same
+            # payloads, so a mismatch fails at decode with a confusing error.
+            - name: ENCRYPT_PAYLOADS
+              value: "true"
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { memory: 256Mi }
+---
+# FastAPI web client: serves the UI and holds the sixth interceptor, the client
+# one, which validates the session token and mints the delegation grant.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: interceptors-web
+  namespace: interceptors
+  labels:
+    app.kubernetes.io/name: interceptors
+    app.kubernetes.io/component: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: interceptors
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: interceptors
+        app.kubernetes.io/component: web
+    spec:
+      containers:
+        - name: web
+          image: interceptors:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "uvicorn", "web.app:app",
+                    "--host", "0.0.0.0", "--port", "8000"]
+          ports:
+            - containerPort: 8000
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal-frontend.temporal.svc.cluster.local:7233
+            - name: TEMPORAL_NAMESPACE
+              value: default
+            # The web tier needs the backend too, not just the worker: the client
+            # interceptor's get_token callback calls /oauth2/refresh there to renew
+            # an expiring session token. Omit it and refresh degrades silently to
+            # "log in again".
+            - name: BACKEND_URL
+              value: http://interceptors-backend:9000
+            - name: ENCRYPT_PAYLOADS
+              value: "true"
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { memory: 256Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: interceptors-web
+  namespace: interceptors
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: interceptors
+    app.kubernetes.io/component: web
+  ports:
+    - port: 8000
+      targetPort: 8000

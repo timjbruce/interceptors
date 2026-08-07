@@ -1,0 +1,20 @@
+#!/bin/sh
+### Copy this file to `setcloudenv.sh`, then edit. runworkflow.sh and runweb.sh
+### automatically source setcloudenv.sh (if present) so the worker, web client,
+### and CLI all connect to Temporal Cloud instead of the local dev server.
+
+# Your Temporal Cloud namespace endpoint and namespace id:
+export TEMPORAL_ADDRESS=<namespace>.<accountId>.tmprl.cloud:7233
+export TEMPORAL_NAMESPACE=<namespace>.<accountId>
+
+# Auth — choose ONE.
+
+# Option A: API key (simplest).
+# export TEMPORAL_API_KEY=<your-api-key>
+
+# Option B: mTLS client certificate.
+# export TEMPORAL_CERT_PATH=/path/to/client.pem
+# export TEMPORAL_KEY_PATH=/path/to/client.key
+
+# Optional — override the task queue (must match across worker + web + CLI):
+# export TEMPORAL_TASK_QUEUE=interceptor-samples

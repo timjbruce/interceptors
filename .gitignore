@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+reviews/
+.claude/
+.pytest_cache/
+TODO.md
+
+# Local Temporal Cloud credentials — never commit these.
+setcloudenv.sh
+*.pem
+*.key

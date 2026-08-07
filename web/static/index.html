@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wyld Stallyns Time Travel</title>
+    <link rel="icon" type="image/svg+xml" href="/static/temporal.svg" />
+    <link rel="alternate icon" href="/static/favicon.ico" />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>🎸 Wyld Stallyns Time Travel</h1>
+      <p class="tag">The Circuits of Time booth — be excellent to each other</p>
+    </header>
+
+    <!-- LOGIN VIEW -->
+    <section id="login" class="card narrow">
+      <h2>Step into the booth</h2>
+      <p class="hint">
+        Pick who you are. You'll be issued your own license (JWT), which your
+        browser holds for this session and sends with every request. Open more
+        tabs to run other dudes at the same time — Rufus is the administrator.
+      </p>
+      <label>I am
+        <select id="identity"></select>
+      </label>
+      <button id="do-login">Enter the phone booth</button>
+    </section>
+
+    <!-- APP VIEW -->
+    <main id="app" class="hidden">
+      <div id="whoami" class="whoami"></div>
+
+      <!-- CUSTOMER PANEL -->
+      <section id="customer" class="card hidden">
+        <h2>Book a most triumphant journey</h2>
+        <p class="hint">
+          Heads up: if your journey could change history, Rufus has to review it
+          before you can jump. If that happens, your booking holds and you'll see
+          it here until he approves or rejects it.
+        </p>
+
+        <label>Where (and when) to?
+          <select id="destination"></select>
+        </label>
+
+        <label>Mission
+          <select id="mission"></select>
+        </label>
+
+        <label class="checkbox">
+          <input id="force_review" type="checkbox" />
+          Force a bogus timeline (guarantees Rufus has to review it)
+        </label>
+
+        <button id="book">Fire up the booth</button>
+        <div id="result" class="result hidden"></div>
+      </section>
+
+      <!-- ADMIN PANEL (Rufus) -->
+      <section id="admin" class="card hidden">
+        <div class="review-head">
+          <h2>🛸 Rufus — Circuits of Time review</h2>
+          <button id="refresh" class="ghost">Refresh</button>
+        </div>
+        <p class="hint">
+          Every trip on the Circuits of Time. Flagged ones wait for your
+          approve/reject. Be excellent.
+        </p>
+        <div id="queue"></div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
