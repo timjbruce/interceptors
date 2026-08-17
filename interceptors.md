@@ -65,7 +65,7 @@ The cast, which the rest of this document refers to freely:
 | **Bill** and **Ted** | travellers who book trips. Bill is `premium`, Ted is `standard` |
 | **Rufus** | the administrator, who approves or rejects flagged trips |
 | **Evil Bill** and **Evil Ted** | robot doubles carrying forged licences, so you can watch a forgery get caught |
-| **Circuits of Time** | the in-world name for the system, so a "Circuits of Time license" is just this demo's JWT |
+| **Circuits of History** | the in-world name for the system, so a "Circuits of History license" is just this demo's JWT |
 | **a trip** | one workflow execution |
 
 The time travel phone booth is built on a Temporal Workflow that uses Interceptors. Interceptors are middleware that can be registered with Temporal Clients and Workers to cover use-cases  such as common utilities or business policies that cross the Client, Workflow, Activities, and other Temporal primitives. Interceptors allow you to take your business' "glue code" and encapsulate it outside of your workflow and activities. Your "glue code" may be related to auditing, logging, security, or business policy. Interceptors enable reuse within and across workflows by being separate from your main workflow and activity code. Interceptors also allows your workflows and activities to remain focused on the business problem that they are trying to solve.
@@ -292,7 +292,7 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
                 cid,
             )
             raise ApplicationError(
-                "Bogus! This trip has no valid Circuits of Time delegation grant on its header.",
+                "Bogus! This trip has no valid Circuits of History delegation grant on its header.",
                 type="InvalidDelegationGrant",
                 non_retryable=True,
             )
@@ -654,7 +654,7 @@ Worker starting on task queue 'interceptor-samples'...
 12:52:44 | INFO | activities.py:172       | [activity] calling paradox-scan backend for traveler bill -> Ancient Greece, 410 B.C. (...)
 12:52:47 | INFO | _client.py:1740         | HTTP Request: POST http://localhost:9000/paradox-scan "HTTP/1.1 200 OK"
 12:52:47 | INFO | activity_logging.py:58  | [interceptor:activity] completed: paradox_scan in 3.384s [correlation_id=cot-019fd722]
-12:52:52 | INFO | workflow.py:74          | [workflow] trip flagged for Rufus's review: Whoa — the Circuits of Time detected a most bogus paradox risk! (...)
+12:52:52 | INFO | workflow.py:74          | [workflow] trip flagged for Rufus's review: Whoa — the Circuits of History detected a most bogus paradox risk! (...)
 12:52:54 | INFO | workflow_audit.py:42    | [interceptor:workflow] query received: get_state args=() (...)
    ...  the traveler's browser polls get_state every ~2s while the trip waits for Rufus  ...
 12:52:59 | INFO | workflow_audit.py:34    | [interceptor:workflow] signal received: submit_review args=(str, str) (...)

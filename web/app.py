@@ -69,6 +69,23 @@ _refreshed_token: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar
 
 logger = logging.getLogger(__name__)
 
+# Uvicorn configures handlers for its own loggers and leaves the root alone, so anything
+# we log below WARNING is discarded by default. That is why a forged licence used to show
+# up in this terminal (client_auth logs it at warning) and an entitlement refusal did not
+# (it logs at info). Attach one handler to our two package loggers, and let propagation
+# carry every child.
+#
+# Deliberately not `logging.basicConfig()`: that lands on the root logger and would also
+# surface httpx's per-request INFO line, which floods this terminal during a demo.
+_LOG_FORMAT = "%(asctime)s | %(levelname)s | %(filename)s:%(lineno)s | %(message)s"
+for _pkg in ("workflows", "web"):
+    _pkg_logger = logging.getLogger(_pkg)
+    if not _pkg_logger.handlers:
+        _handler = logging.StreamHandler()
+        _handler.setFormatter(logging.Formatter(_LOG_FORMAT))
+        _pkg_logger.addHandler(_handler)
+        _pkg_logger.setLevel(logging.INFO)
+
 _client: Optional[Client] = None
 
 
@@ -161,7 +178,7 @@ def _with_refreshed(payload: dict) -> dict:
 def _require_admin(authorization: Optional[str]) -> dict:
     identity = _session_identity(authorization)
     if not identity or identity.get("role") != "admin":
-        raise HTTPException(status_code=403, detail="Bogus! Only Rufus can review the Circuits of Time.")
+        raise HTTPException(status_code=403, detail="Bogus! Only Rufus can review the Circuits of History.")
     return identity
 
 
@@ -269,7 +286,7 @@ async def book(body: BookRequest, authorization: Optional[str] = Header(default=
     except WorkflowAlreadyStartedError:
         return _with_refreshed({
             "status": "failed",
-            "message": "Whoa! You've still got a trip on the Circuits of Time. Let it finish before booking another.",
+            "message": "Whoa! You've still got a trip on the Circuits of History. Let it finish before booking another.",
         })
 
     # An un-flagged trip resolves fast; a flagged trip is still waiting for Rufus

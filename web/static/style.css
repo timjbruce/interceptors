@@ -17,7 +17,7 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  /* Neon phone booth backdrop, layered over the Circuits of Time glow. The booth
+  /* Neon phone booth backdrop, layered over the Circuits of History glow. The booth
      SVG is transparent, so the gradient shows through it. */
   background:
     url("/static/phonebooth.svg") no-repeat right -16px bottom -8px / auto min(80vh, 520px),

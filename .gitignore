@@ -5,6 +5,7 @@ reviews/
 .claude/
 .pytest_cache/
 TODO.md
+presentationtodo.md
 
 # Local Temporal Cloud credentials — never commit these.
 setcloudenv.sh

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+<defs><marker id="a-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#6ce0ff"/></marker><marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#b58bff"/></marker><marker id="a-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3ad29f"/></marker><marker id="a-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#ff6b8b"/></marker><marker id="a-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#ffcf6b"/></marker><marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8a95c0"/></marker><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e7ecff"/></marker><radialGradient id="halo" cx="72%" cy="-6%" r="80%"><stop offset="0" stop-color="#1a2450"/><stop offset="1" stop-color="#0b1020"/></radialGradient><linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6ce0ff" stop-opacity="0.14"/><stop offset="1" stop-color="#b58bff" stop-opacity="0.05"/></linearGradient><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0 H0 V48" fill="none" stroke="#263056" stroke-width="1"/></pattern><linearGradient id="tlogo" x1="183" y1="192" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#444CE7"/><stop offset="1" stop-color="#B664FF"/></linearGradient><filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<rect width="1280" height="720" fill="url(#halo)"/>
+<rect width="1280" height="720" fill="url(#grid)" opacity="0.35"/>
+<rect x="72" y="60" width="5" height="92" rx="2.5" fill="#b58bff"/>
+<text x="100" y="100" font-size="42" fill="#e7ecff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Five places to hook in</text>
+<text x="100" y="140" font-size="21" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Where the call happens decides what you are allowed to do about it.</text>
+<rect x="88" y="176" width="344" height="512" rx="16" fill="#141b32" fill-opacity="1.0" stroke="#ff7ae0" stroke-width="1.6"/>
+<text x="110" y="210" font-size="17" fill="#ff7ae0" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">YOUR APP PROCESS</text>
+<line x1="110" y1="226" x2="410" y2="226" stroke="#263056" stroke-width="1"/>
+<rect x="114" y="264" width="292" height="125" rx="10" fill="#1b2444" fill-opacity="0.9" stroke="#ff7ae0" stroke-width="1.6"/>
+<rect x="114" y="264" width="4" height="125" rx="2" fill="#ff7ae0"/>
+<text x="132" y="291" font-size="16" fill="#ff7ae0" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">client outbound</text>
+<text x="132" y="314" font-size="11" fill="#ff7ae0" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">start_workflow</text>
+<text x="132" y="329" font-size="11" fill="#ff7ae0" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">signal_workflow</text>
+<text x="132" y="344" font-size="11" fill="#ff7ae0" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">query_workflow</text>
+<text x="132" y="359" font-size="11" fill="#ff7ae0" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">start_workflow_update</text>
+<text x="132" y="374" font-size="11" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.75">… 40 in all</text>
+<rect x="114" y="536" width="292" height="132" rx="10" fill="#1b2444" fill-opacity="0.5" stroke="#263056" stroke-width="1.6"/>
+<text x="130" y="556" font-size="10" fill="#8a95c0" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">PYTHON CALL</text>
+<text x="390" y="556" font-size="10" fill="#8a95c0" font-weight="700" text-anchor="end" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">OK HERE</text>
+<text x="130" y="580" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">time.time()</text>
+<text x="390" y="580" font-size="13" fill="#3ad29f" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">yes</text>
+<text x="130" y="602" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">random.random()</text>
+<text x="390" y="602" font-size="13" fill="#3ad29f" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">yes</text>
+<text x="130" y="624" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">socket, HTTP</text>
+<text x="390" y="624" font-size="13" fill="#3ad29f" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">yes</text>
+<text x="130" y="646" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">re-runs on replay</text>
+<text x="390" y="646" font-size="13" fill="#8a95c0" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">no</text>
+<rect x="456" y="176" width="736" height="512" rx="16" fill="#141b32" fill-opacity="1.0" stroke="#b58bff" stroke-width="1.6"/>
+<text x="478" y="210" font-size="17" fill="#b58bff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">ONE WORKER PROCESS  (you run many)</text>
+<line x1="478" y1="226" x2="1170" y2="226" stroke="#263056" stroke-width="1"/>
+<rect x="480" y="238" width="332" height="434" rx="12" fill="#1b2444" fill-opacity="0.55" stroke="#ffcf6b" stroke-width="1.6" stroke-dasharray="7 6"/>
+<text x="646" y="258" font-size="15" fill="#ffcf6b" font-weight="700" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">workflow interceptors</text>
+<rect x="500" y="268" width="292" height="125" rx="10" fill="#1b2444" fill-opacity="0.9" stroke="#ffcf6b" stroke-width="1.6"/>
+<rect x="500" y="268" width="4" height="125" rx="2" fill="#ffcf6b"/>
+<text x="518" y="295" font-size="16" fill="#ffcf6b" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">workflow inbound</text>
+<text x="518" y="318" font-size="11" fill="#ffcf6b" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">execute_workflow</text>
+<text x="518" y="333" font-size="11" fill="#ffcf6b" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">handle_signal</text>
+<text x="518" y="348" font-size="11" fill="#ffcf6b" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">handle_query</text>
+<text x="518" y="363" font-size="11" fill="#ffcf6b" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">handle_update_handler</text>
+<text x="518" y="378" font-size="11" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.75">… 6 in all</text>
+<rect x="500" y="400" width="292" height="125" rx="10" fill="#1b2444" fill-opacity="0.9" stroke="#ffcf6b" stroke-width="1.6"/>
+<rect x="500" y="400" width="4" height="125" rx="2" fill="#ffcf6b"/>
+<text x="518" y="427" font-size="16" fill="#ffcf6b" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">workflow outbound</text>
+<text x="518" y="450" font-size="11" fill="#ffcf6b" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">start_activity</text>
+<text x="518" y="465" font-size="11" fill="#ffcf6b" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">start_child_workflow</text>
+<text x="518" y="480" font-size="11" fill="#ffcf6b" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">signal_external_workflow</text>
+<text x="518" y="495" font-size="11" fill="#ffcf6b" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">continue_as_new</text>
+<text x="518" y="510" font-size="11" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.75">… 8 in all</text>
+<rect x="500" y="536" width="292" height="132" rx="10" fill="#1b2444" fill-opacity="0.5" stroke="#263056" stroke-width="1.6"/>
+<text x="516" y="556" font-size="10" fill="#8a95c0" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">PYTHON CALL</text>
+<text x="776" y="556" font-size="10" fill="#8a95c0" font-weight="700" text-anchor="end" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">OK HERE</text>
+<text x="516" y="580" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">time.time()</text>
+<text x="776" y="580" font-size="13" fill="#ff6b8b" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">no</text>
+<text x="516" y="602" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">random.random()</text>
+<text x="776" y="602" font-size="13" fill="#ff6b8b" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">no</text>
+<text x="516" y="624" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">socket, HTTP</text>
+<text x="776" y="624" font-size="13" fill="#ff6b8b" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">no</text>
+<text x="516" y="646" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">re-runs on replay</text>
+<text x="776" y="646" font-size="13" fill="#ffcf6b" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">yes</text>
+<rect x="836" y="238" width="332" height="434" rx="12" fill="#1b2444" fill-opacity="0.55" stroke="#6ce0ff" stroke-width="1.6"/>
+<text x="1002" y="258" font-size="15" fill="#6ce0ff" font-weight="700" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">activity interceptors</text>
+<rect x="856" y="268" width="292" height="95" rx="10" fill="#1b2444" fill-opacity="0.9" stroke="#6ce0ff" stroke-width="1.6"/>
+<rect x="856" y="268" width="4" height="95" rx="2" fill="#6ce0ff"/>
+<text x="874" y="295" font-size="16" fill="#6ce0ff" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">activity inbound</text>
+<text x="874" y="318" font-size="11" fill="#6ce0ff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">init</text>
+<text x="874" y="333" font-size="11" fill="#6ce0ff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">execute_activity</text>
+<text x="874" y="348" font-size="11" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.75">2 in all</text>
+<rect x="856" y="400" width="292" height="95" rx="10" fill="#1b2444" fill-opacity="0.9" stroke="#6ce0ff" stroke-width="1.6"/>
+<rect x="856" y="400" width="4" height="95" rx="2" fill="#6ce0ff"/>
+<text x="874" y="427" font-size="16" fill="#6ce0ff" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">activity outbound</text>
+<text x="874" y="450" font-size="11" fill="#6ce0ff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">heartbeat</text>
+<text x="874" y="465" font-size="11" fill="#6ce0ff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">info</text>
+<text x="874" y="480" font-size="11" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.75">2 in all</text>
+<rect x="856" y="536" width="292" height="132" rx="10" fill="#1b2444" fill-opacity="0.5" stroke="#263056" stroke-width="1.6"/>
+<text x="872" y="556" font-size="10" fill="#8a95c0" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">PYTHON CALL</text>
+<text x="1132" y="556" font-size="10" fill="#8a95c0" font-weight="700" text-anchor="end" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">OK HERE</text>
+<text x="872" y="580" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">time.time()</text>
+<text x="1132" y="580" font-size="13" fill="#3ad29f" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">yes</text>
+<text x="872" y="602" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">random.random()</text>
+<text x="1132" y="602" font-size="13" fill="#3ad29f" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">yes</text>
+<text x="872" y="624" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">socket, HTTP</text>
+<text x="1132" y="624" font-size="13" fill="#3ad29f" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">yes</text>
+<text x="872" y="646" font-size="13" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="0.85">re-runs on replay</text>
+<text x="1132" y="646" font-size="13" fill="#8a95c0" font-weight="700" text-anchor="end" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">no</text>
+</svg>

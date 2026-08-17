@@ -17,12 +17,11 @@ that would otherwise be sprinkled through the workflow body:
      activity or backend call — instead of later at the backend.
   3. **Tag the execution** with Search Attributes (`Traveler`, `Mission`) so trips
      are filterable in the Temporal UI / CLI (e.g. `Traveler = 'bill'`) without
-     touching business code. (The attributes are auto-registered at worker
-     startup — see `worker.py` — so a fresh Temporal just works.)
+     touching business code. (This interceptor populates their values on every run.)
 
 ## The check runs in an activity, and that is the interesting part
 
-This interceptor **schedules** the verification (`activities.verify_grant`); it
+This interceptor **schedules** the verification (`interceptors/auth_activities.verify_grant`); it
 does not perform it. Doing the check inline here would put it inside the sandbox,
 where there is no clock and no network — so it could only ever answer *"was this
 signed and well-formed"*, never *"is this credential still valid right now."*
@@ -70,7 +69,7 @@ from temporalio.worker import (
 from workflows.interceptors.client_auth import GRANT_HEADER_KEY
 
 with workflow.unsafe.imports_passed_through():
-    from workflows.activities import verify_grant
+    from workflows.interceptors.auth_activities import verify_grant
 
 # Header carrying the correlation id from the workflow to its activities.
 CORRELATION_HEADER_KEY = "correlation-id"
@@ -82,8 +81,7 @@ CORRELATION_HEADER_KEY = "correlation-id"
 _VERIFY_TIMEOUT = timedelta(seconds=10)
 _VERIFY_RETRY = RetryPolicy(maximum_attempts=3)
 
-# Custom Search Attributes (Keyword) this interceptor writes. They are registered
-# on the namespace at worker startup (see worker.py `_ensure_search_attributes`).
+# Custom Search Attributes (Keyword) this interceptor populates on every run.
 TRAVELER_SA = SearchAttributeKey.for_keyword("Traveler")
 MISSION_SA = SearchAttributeKey.for_keyword("Mission")
 
@@ -119,9 +117,14 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
         # the run id (stable across replays). Set first so the verification activity
         # scheduled below already logs under it. Propagated to activities by the
         # outbound hook.
+        #
+        # The WHOLE run id, not a slice of it. Run ids are UUIDv7, so their leading hex
+        # digits are a millisecond timestamp: `run_id[:8]` only changes about every 65
+        # seconds, which made every trip started in the same minute share one id and made
+        # `grep <cid>` return somebody else's trip. Longer log lines are the whole cost.
         cpayload = (input.headers or {}).get(CORRELATION_HEADER_KEY)
         cid = workflow.payload_converter().from_payload(cpayload, str) if cpayload is not None else None
-        cid = cid or f"cot-{workflow.info().run_id[:8]}"
+        cid = cid or f"cot-{workflow.info().run_id}"
         correlation_id.set(cid)
 
         # (2) Guardrail. Read the grant off the start header and hand it to an
@@ -161,7 +164,7 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
                 cid,
             )
             raise ApplicationError(
-                "Bogus! This trip has no valid Circuits of Time delegation grant on its header.",
+                "Bogus! This trip has no valid Circuits of History delegation grant on its header.",
                 type="InvalidDelegationGrant",
                 non_retryable=True,
             )

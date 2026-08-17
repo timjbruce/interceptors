@@ -20,7 +20,7 @@ class ScanResult:
 
 @dataclass
 class GrantCheck:
-    """Outcome of the delegation-grant check (`activities.verify_grant`).
+    """Outcome of the delegation-grant check (`interceptors/auth_activities.verify_grant`).
 
     `reason` is a REJECT_* code for logging only — never a response body. The
     verified identity comes back with it so the startup interceptor can tag the

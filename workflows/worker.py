@@ -12,7 +12,8 @@ import logging
 from temporalio.client import Client
 from temporalio.worker import Worker
 
-from workflows.activities import execute_jump, paradox_scan, verify_grant
+from workflows.activities import execute_jump, paradox_scan
+from workflows.interceptors.auth_activities import verify_grant
 from workflows.client import connect
 from workflows.config import TASK_QUEUE, TEMPORAL_ADDRESS, TEMPORAL_NAMESPACE
 from workflows.interceptors.activity_logging import ActivityLoggingInterceptor

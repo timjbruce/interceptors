@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+<defs><marker id="a-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#6ce0ff"/></marker><marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#b58bff"/></marker><marker id="a-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3ad29f"/></marker><marker id="a-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#ff6b8b"/></marker><marker id="a-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#ffcf6b"/></marker><marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8a95c0"/></marker><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e7ecff"/></marker><radialGradient id="halo" cx="72%" cy="-6%" r="80%"><stop offset="0" stop-color="#1a2450"/><stop offset="1" stop-color="#0b1020"/></radialGradient><linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6ce0ff" stop-opacity="0.14"/><stop offset="1" stop-color="#b58bff" stop-opacity="0.05"/></linearGradient><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0 H0 V48" fill="none" stroke="#263056" stroke-width="1"/></pattern><linearGradient id="tlogo" x1="183" y1="192" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#444CE7"/><stop offset="1" stop-color="#B664FF"/></linearGradient><filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<rect width="1280" height="720" fill="url(#halo)"/>
+<rect width="1280" height="720" fill="url(#grid)" opacity="0.35"/>
+<rect x="72" y="60" width="5" height="92" rx="2.5" fill="#3ad29f"/>
+<text x="100" y="100" font-size="42" fill="#e7ecff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Six business requirements, six interceptors</text>
+<text x="100" y="140" font-size="21" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">One file each. None of it in the workflow.</text>
+<circle cx="118" cy="218" r="17" fill="#ff7ae0" fill-opacity="0.14" stroke="#ff7ae0" stroke-width="1.8"/>
+<text x="118" y="224" font-size="15" fill="#ff7ae0" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">1</text>
+<rect x="154" y="190" width="402" height="56" rx="12" fill="#141b32" fill-opacity="0.85" stroke="#263056" stroke-width="1.6"/>
+<text x="176" y="225" font-size="20" fill="#e7ecff" font-weight="600" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Only real travelers ride</text>
+<path d="M566 218 L606 218" fill="none" stroke="#8a95c0" stroke-width="2" marker-end="url(#a-muted)"/>
+<rect x="614" y="190" width="570" height="56" rx="12" fill="#1b2444" fill-opacity="0.85" stroke="#ff7ae0" stroke-width="1.6"/>
+<text x="636" y="224" font-size="16" fill="#ff7ae0" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">client_auth</text>
+<text x="1162" y="224" font-size="12" fill="#8a95c0" font-weight="400" text-anchor="end" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">client outbound</text>
+<circle cx="118" cy="284" r="17" fill="#ff7ae0" fill-opacity="0.14" stroke="#ff7ae0" stroke-width="1.8"/>
+<text x="118" y="290" font-size="15" fill="#ff7ae0" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">2</text>
+<rect x="154" y="256" width="402" height="56" rx="12" fill="#141b32" fill-opacity="0.85" stroke="#263056" stroke-width="1.6"/>
+<text x="176" y="291" font-size="20" fill="#e7ecff" font-weight="600" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Save the Future needs clearance</text>
+<path d="M566 284 L606 284" fill="none" stroke="#8a95c0" stroke-width="2" marker-end="url(#a-muted)"/>
+<rect x="614" y="256" width="570" height="56" rx="12" fill="#1b2444" fill-opacity="0.85" stroke="#ff7ae0" stroke-width="1.6"/>
+<text x="636" y="290" font-size="16" fill="#ff7ae0" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">client_auth</text>
+<text x="1162" y="290" font-size="12" fill="#8a95c0" font-weight="400" text-anchor="end" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">client outbound</text>
+<circle cx="118" cy="350" r="17" fill="#ffcf6b" fill-opacity="0.14" stroke="#ffcf6b" stroke-width="1.8"/>
+<text x="118" y="356" font-size="15" fill="#ffcf6b" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">3</text>
+<rect x="154" y="322" width="402" height="56" rx="12" fill="#141b32" fill-opacity="0.85" stroke="#263056" stroke-width="1.6"/>
+<text x="176" y="357" font-size="20" fill="#e7ecff" font-weight="600" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Prove who approved it</text>
+<path d="M566 350 L606 350" fill="none" stroke="#8a95c0" stroke-width="2" marker-end="url(#a-muted)"/>
+<rect x="614" y="322" width="570" height="56" rx="12" fill="#1b2444" fill-opacity="0.85" stroke="#ffcf6b" stroke-width="1.6"/>
+<text x="636" y="356" font-size="16" fill="#ffcf6b" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">workflow_audit</text>
+<text x="1162" y="356" font-size="12" fill="#8a95c0" font-weight="400" text-anchor="end" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">workflow inbound</text>
+<circle cx="118" cy="416" r="17" fill="#b58bff" fill-opacity="0.14" stroke="#b58bff" stroke-width="1.8"/>
+<text x="118" y="422" font-size="15" fill="#b58bff" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">4</text>
+<rect x="154" y="388" width="402" height="56" rx="12" fill="#141b32" fill-opacity="0.85" stroke="#263056" stroke-width="1.6"/>
+<text x="176" y="423" font-size="20" fill="#e7ecff" font-weight="600" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">See what happened on a trip</text>
+<path d="M566 416 L606 416" fill="none" stroke="#8a95c0" stroke-width="2" marker-end="url(#a-muted)"/>
+<rect x="614" y="388" width="570" height="56" rx="12" fill="#1b2444" fill-opacity="0.85" stroke="#b58bff" stroke-width="1.6"/>
+<text x="636" y="422" font-size="16" fill="#b58bff" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">workflow_startup + activity_logging</text>
+<text x="1162" y="422" font-size="12" fill="#8a95c0" font-weight="400" text-anchor="end" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">workflow in and out, activity in</text>
+<circle cx="118" cy="482" r="17" fill="#b58bff" fill-opacity="0.14" stroke="#b58bff" stroke-width="1.8"/>
+<text x="118" y="488" font-size="15" fill="#b58bff" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">5</text>
+<rect x="154" y="454" width="402" height="56" rx="12" fill="#141b32" fill-opacity="0.85" stroke="#263056" stroke-width="1.6"/>
+<text x="176" y="489" font-size="20" fill="#e7ecff" font-weight="600" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Name the traveler acted for</text>
+<path d="M566 482 L606 482" fill="none" stroke="#8a95c0" stroke-width="2" marker-end="url(#a-muted)"/>
+<rect x="614" y="454" width="570" height="56" rx="12" fill="#1b2444" fill-opacity="0.85" stroke="#b58bff" stroke-width="1.6"/>
+<text x="636" y="488" font-size="16" fill="#b58bff" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">grant_propagation + token_exchange</text>
+<text x="1162" y="488" font-size="12" fill="#8a95c0" font-weight="400" text-anchor="end" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">workflow in and out, activity in</text>
+<circle cx="118" cy="548" r="17" fill="#3ad29f" fill-opacity="0.14" stroke="#3ad29f" stroke-width="1.8"/>
+<text x="118" y="554" font-size="15" fill="#3ad29f" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">6</text>
+<rect x="154" y="520" width="402" height="56" rx="12" fill="#141b32" fill-opacity="0.85" stroke="#263056" stroke-width="1.6"/>
+<text x="176" y="555" font-size="20" fill="#e7ecff" font-weight="600" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Can be added to every workflow</text>
+<path d="M566 548 L606 548" fill="none" stroke="#8a95c0" stroke-width="2" marker-end="url(#a-muted)"/>
+<rect x="614" y="520" width="570" height="56" rx="12" fill="#1b2444" fill-opacity="0.85" stroke="#3ad29f" stroke-width="1.6"/>
+<text x="636" y="554" font-size="16" fill="#3ad29f" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">all six, wired up the same way</text>
+<rect x="154" y="588" width="1030" height="108" rx="10" fill="#3ad29f" fill-opacity="0.10" stroke="#3ad29f" stroke-opacity="0.5" stroke-width="1.4"/>
+<rect x="154" y="588" width="5" height="108" rx="2.5" fill="#3ad29f"/>
+<text x="172" y="623" font-size="14" fill="#3ad29f" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">INTERCEPTORS HELP MEET REQUIREMENT 6</text>
+<text x="172" y="647" font-size="17" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="0.92">One is wired into every client that starts a trip. Five are wired once on the worker</text>
+<text x="172" y="671" font-size="17" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="0.92">and inherited by every workflow there, including the ones nobody has written yet.</text>
+</svg>

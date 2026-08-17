@@ -15,7 +15,7 @@
   </defs>
 
   <g opacity="0.55">
-    <!-- glow of the Circuits of Time behind the booth -->
+    <!-- glow of the Circuits of History behind the booth -->
     <ellipse cx="120" cy="210" rx="128" ry="210" fill="url(#halo)"/>
 
     <g stroke="#6ce0ff" stroke-width="2.5" stroke-linejoin="round" filter="url(#glow)">

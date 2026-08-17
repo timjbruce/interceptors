@@ -179,12 +179,12 @@ function renderResultBox(data) {
   const msg =
     data.message ||
     (data.detail && data.detail.reason) ||
-    (awaiting ? "Strange things are afoot at the Circuits of Time. Rufus has to review this one." : "");
+    (awaiting ? "Strange things are afoot at the Circuits of History. Rufus has to review this one." : "");
   let note = "";
   if (awaiting)
     note = `<div class="waiting">⏳ Waiting for Rufus's decision…</div>`;
   else if (!TERMINAL.has(status))
-    note = `<div class="waiting">⏳ Traveling the Circuits of Time…</div>`;
+    note = `<div class="waiting">⏳ Traveling the Circuits of History…</div>`;
   box.innerHTML =
     `<span class="badge ${cls}">${text}</span><br/>${esc(msg)}` +
     note +
@@ -295,7 +295,7 @@ async function refreshQueue() {
   const q = $("queue");
   q.innerHTML = "";
   if (!trips.length) {
-    q.innerHTML = '<p class="empty">No trips on the Circuits of Time right now. Party on.</p>';
+    q.innerHTML = '<p class="empty">No trips on the Circuits of History right now. Party on.</p>';
     return;
   }
   for (const t of trips) {

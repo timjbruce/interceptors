@@ -1,1 +1,1 @@
-"""Circuits of Time backend service — a JWT-authorized microservice."""
+"""Circuits of History backend service — a JWT-authorized microservice."""

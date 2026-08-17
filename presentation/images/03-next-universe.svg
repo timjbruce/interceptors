@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+<defs><marker id="a-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#6ce0ff"/></marker><marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#b58bff"/></marker><marker id="a-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3ad29f"/></marker><marker id="a-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#ff6b8b"/></marker><marker id="a-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#ffcf6b"/></marker><marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8a95c0"/></marker><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e7ecff"/></marker><radialGradient id="halo" cx="72%" cy="-6%" r="80%"><stop offset="0" stop-color="#1a2450"/><stop offset="1" stop-color="#0b1020"/></radialGradient><linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6ce0ff" stop-opacity="0.14"/><stop offset="1" stop-color="#b58bff" stop-opacity="0.05"/></linearGradient><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0 H0 V48" fill="none" stroke="#263056" stroke-width="1"/></pattern><linearGradient id="tlogo" x1="183" y1="192" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#444CE7"/><stop offset="1" stop-color="#B664FF"/></linearGradient><filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<rect width="1280" height="720" fill="url(#halo)"/>
+<rect width="1280" height="720" fill="url(#grid)" opacity="0.35"/>
+<rect x="72" y="60" width="5" height="92" rx="2.5" fill="#b58bff"/>
+<text x="100" y="100" font-size="42" fill="#e7ecff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">The next universe</text>
+<text x="100" y="140" font-size="21" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Same timeline, different universe. This time the business has requirements.</text>
+<rect x="112" y="194" width="372" height="216" rx="16" fill="#141b32" fill-opacity="1.0" stroke="#6ce0ff" stroke-width="1.6"/>
+<text x="134" y="228" font-size="17" fill="#6ce0ff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">UNIVERSE 2 · TIMELINE MATCH</text>
+<line x1="134" y1="244" x2="462" y2="244" stroke="#263056" stroke-width="1"/>
+<text x="298" y="286" font-size="44" fill="#6ce0ff" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">99.2%</text>
+<text x="298" y="314" font-size="14" fill="#8a95c0" font-weight="400" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">same history, same heinous risks</text>
+<line x1="146" y1="344" x2="450" y2="344" stroke="#b58bff" stroke-width="2" opacity="0.55"/>
+<circle cx="152" cy="344" r="3.4" fill="#b58bff"/>
+<circle cx="189" cy="344" r="3.4" fill="#b58bff"/>
+<circle cx="226" cy="344" r="3.4" fill="#b58bff"/>
+<circle cx="263" cy="344" r="3.4" fill="#b58bff"/>
+<circle cx="300" cy="344" r="3.4" fill="#b58bff"/>
+<circle cx="337" cy="344" r="3.4" fill="#b58bff"/>
+<circle cx="374" cy="344" r="3.4" fill="#b58bff"/>
+<circle cx="411" cy="344" r="3.4" fill="#b58bff"/>
+<circle cx="448" cy="344" r="3.4" fill="#b58bff"/>
+<line x1="146" y1="374" x2="450" y2="374" stroke="#6ce0ff" stroke-width="2" opacity="0.55"/>
+<circle cx="152" cy="374" r="3.4" fill="#6ce0ff"/>
+<circle cx="189" cy="374" r="3.4" fill="#6ce0ff"/>
+<circle cx="226" cy="374" r="3.4" fill="#6ce0ff"/>
+<circle cx="263" cy="374" r="3.4" fill="#6ce0ff"/>
+<circle cx="300" cy="374" r="3.4" fill="#6ce0ff"/>
+<circle cx="337" cy="374" r="3.4" fill="#6ce0ff"/>
+<circle cx="374" cy="374" r="3.4" fill="#6ce0ff"/>
+<circle cx="411" cy="374" r="3.4" fill="#6ce0ff"/>
+<circle cx="448" cy="374" r="3.4" fill="#6ce0ff"/>
+<text x="146" y="396" font-size="12" fill="#b58bff" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">ours</text>
+<text x="450" y="396" font-size="12" fill="#6ce0ff" font-weight="400" text-anchor="end" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">theirs</text>
+<path d="M112 546 h372 l-26 42 h-320 Z" fill="#141b32" stroke="#263056" stroke-width="1.6"/>
+<rect x="112" y="526" width="372" height="22" rx="6" fill="#1b2444" stroke="#b58bff" stroke-width="1.4"/>
+<line x1="124" y1="440" x2="472" y2="440" stroke="#263056" stroke-width="3"/>
+<circle cx="156.0" cy="444" r="5.5" fill="#ffcf6b" fill-opacity="0.55" stroke="#ffcf6b" stroke-width="1.4"/>
+<line x1="156.0" y1="450" x2="156.0" y2="464" stroke="#ffcf6b" stroke-width="1.4" opacity="0.4"/>
+<circle cx="250.66666666666669" cy="444" r="5.5" fill="#ffcf6b" fill-opacity="0.55" stroke="#ffcf6b" stroke-width="1.4"/>
+<line x1="250.66666666666669" y1="450" x2="250.66666666666669" y2="464" stroke="#ffcf6b" stroke-width="1.4" opacity="0.4"/>
+<circle cx="345.33333333333337" cy="444" r="5.5" fill="#ffcf6b" fill-opacity="0.55" stroke="#ffcf6b" stroke-width="1.4"/>
+<line x1="345.33333333333337" y1="450" x2="345.33333333333337" y2="464" stroke="#ffcf6b" stroke-width="1.4" opacity="0.4"/>
+<circle cx="440.0" cy="444" r="5.5" fill="#ffcf6b" fill-opacity="0.55" stroke="#ffcf6b" stroke-width="1.4"/>
+<line x1="440.0" y1="450" x2="440.0" y2="464" stroke="#ffcf6b" stroke-width="1.4" opacity="0.4"/>
+<g transform="translate(184 544) scale(1.05)"><circle cx="0" cy="-54" r="17" fill="#1b2444" stroke="#b58bff" stroke-width="2.2"/><path d="M-18 -55 q1 -18 18 -18 q17 0 18 18 q-6 -10 -18 -10 q-12 0 -18 10 z" fill="#b58bff" fill-opacity="0.3" stroke="#b58bff" stroke-width="1.8"/><circle cx="-6" cy="-56" r="2.2" fill="#b58bff"/><circle cx="6" cy="-56" r="2.2" fill="#b58bff"/><path d="M-7 -47 q7 6 14 0" fill="none" stroke="#b58bff" stroke-width="1.8"/><path d="M-24 0 L-24 -22 Q-24 -38 0 -38 Q24 -38 24 -22 L24 0 Z" fill="#1b2444" stroke="#b58bff" stroke-width="2.2" stroke-linejoin="round"/><path d="M18 -30 q10 4 8 16 q-2 12 -12 14" fill="none" stroke="#ffcf6b" stroke-width="2.6"/><circle cx="12" cy="2" r="6" fill="none" stroke="#ffcf6b" stroke-width="2.4"/></g>
+<g transform="translate(298 544) scale(1.2)"><circle cx="0" cy="-54" r="17" fill="#1b2444" stroke="#b58bff" stroke-width="2.2"/><path d="M-18 -55 q1 -18 18 -18 q17 0 18 18 q-6 -10 -18 -10 q-12 0 -18 10 z" fill="#b58bff" fill-opacity="0.3" stroke="#b58bff" stroke-width="1.8"/><circle cx="-6" cy="-56" r="2.2" fill="#b58bff"/><circle cx="6" cy="-56" r="2.2" fill="#b58bff"/><path d="M-7 -47 q7 6 14 0" fill="none" stroke="#b58bff" stroke-width="1.8"/><path d="M-24 0 L-24 -22 Q-24 -38 0 -38 Q24 -38 24 -22 L24 0 Z" fill="#1b2444" stroke="#b58bff" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="16" cy="-6" rx="11" ry="13" fill="none" stroke="#ffcf6b" stroke-width="2.2"/><rect x="8" y="-42" width="4" height="26" rx="2" fill="none" stroke="#ffcf6b" stroke-width="1.8"/></g>
+<g transform="translate(412 544) scale(1.05)"><circle cx="0" cy="-54" r="17" fill="#1b2444" stroke="#b58bff" stroke-width="2.2"/><path d="M-18 -55 q1 -18 18 -18 q17 0 18 18 q-6 -10 -18 -10 q-12 0 -18 10 z" fill="#b58bff" fill-opacity="0.3" stroke="#b58bff" stroke-width="1.8"/><circle cx="-6" cy="-56" r="2.2" fill="#b58bff"/><circle cx="6" cy="-56" r="2.2" fill="#b58bff"/><path d="M-7 -47 q7 6 14 0" fill="none" stroke="#b58bff" stroke-width="1.8"/><path d="M-24 0 L-24 -22 Q-24 -38 0 -38 Q24 -38 24 -22 L24 0 Z" fill="#1b2444" stroke="#b58bff" stroke-width="2.2" stroke-linejoin="round"/><rect x="-22" y="-16" width="44" height="12" rx="3" fill="#0d132a" stroke='#ffcf6b' stroke-width="2"/><path d="M-14 -16 v12 M-6 -16 v12 M2 -16 v12 M10 -16 v12" stroke="#ffcf6b" stroke-width="1.4"/></g>
+<text x="298" y="620" font-size="16" fill="#b58bff" font-weight="700" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">The Three Most Important People</text>
+<text x="298" y="642" font-size="16" fill="#b58bff" font-weight="700" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">in the Universe</text>
+<rect x="536" y="176" width="672" height="492" rx="16" fill="#141b32" fill-opacity="1.0" stroke="#ffcf6b" stroke-width="1.6"/>
+<text x="558" y="210" font-size="17" fill="#ffcf6b" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">WHAT THE BUSINESS NEEDS THIS TIME</text>
+<line x1="558" y1="226" x2="1186" y2="226" stroke="#263056" stroke-width="1"/>
+<circle cx="574" cy="260" r="17" fill="#6ce0ff" fill-opacity="0.14" stroke="#6ce0ff" stroke-width="1.6"/>
+<text x="574" y="266" font-size="15" fill="#6ce0ff" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">1</text>
+<text x="606" y="266" font-size="19" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Only real travelers ever ride the booth.</text>
+<circle cx="574" cy="318" r="17" fill="#6ce0ff" fill-opacity="0.14" stroke="#6ce0ff" stroke-width="1.6"/>
+<text x="574" y="324" font-size="15" fill="#6ce0ff" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">2</text>
+<text x="606" y="324" font-size="19" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Only cleared travelers can run Save the Future.</text>
+<circle cx="574" cy="376" r="17" fill="#6ce0ff" fill-opacity="0.14" stroke="#6ce0ff" stroke-width="1.6"/>
+<text x="574" y="382" font-size="15" fill="#6ce0ff" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">3</text>
+<text x="606" y="382" font-size="19" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">We can prove who approved a trip, and when.</text>
+<circle cx="574" cy="434" r="17" fill="#6ce0ff" fill-opacity="0.14" stroke="#6ce0ff" stroke-width="1.6"/>
+<text x="574" y="440" font-size="15" fill="#6ce0ff" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">4</text>
+<text x="606" y="440" font-size="19" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">We can see what the worker did on a trip.</text>
+<circle cx="574" cy="492" r="17" fill="#6ce0ff" fill-opacity="0.14" stroke="#6ce0ff" stroke-width="1.6"/>
+<text x="574" y="498" font-size="15" fill="#6ce0ff" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">5</text>
+<text x="606" y="498" font-size="19" fill="#e7ecff" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Auditors can see exactly who each action was for.</text>
+<line x1="558" y1="542" x2="1186" y2="542" stroke="#263056" stroke-width="1"/>
+<circle cx="574" cy="592" r="17" fill="#ffcf6b" fill-opacity="0.16" stroke="#ffcf6b" stroke-width="1.8"/>
+<text x="574" y="598" font-size="15" fill="#ffcf6b" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">6</text>
+<text x="606" y="590" font-size="20" fill="#ffcf6b" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">True of every system we run.</text>
+<text x="606" y="616" font-size="18" fill="#ffcf6b" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="0.85">Not just the booth, Rufus.</text>
+</svg>

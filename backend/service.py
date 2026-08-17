@@ -1,4 +1,4 @@
-"""Circuits of Time — the JWT-authorized backend microservice.
+"""Circuits of History — the JWT-authorized backend microservice.
 
 This is the "real backend" the time-travel activities call over HTTP. It runs as
 its own process so you can see the token actually cross the wire to a separate
@@ -70,7 +70,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("backend")
 
-app = FastAPI(title="Circuits of Time — backend")
+app = FastAPI(title="Circuits of History — backend")
 
 
 class ScanBody(BaseModel):
@@ -112,7 +112,7 @@ def _authorize(authorization: Optional[str], endpoint: str) -> dict:
         )
         raise HTTPException(
             status_code=401,
-            detail="Bogus! Backend requires a delegated Circuits of Time access token.",
+            detail="Bogus! Backend requires a delegated Circuits of History access token.",
         )
 
     # Delegation, not impersonation: both identities are present, so the audit line
@@ -287,7 +287,7 @@ async def paradox_scan(body: ScanBody, authorization: Optional[str] = Header(def
     if body.force_review:
         return {"flagged": True, "reason": "Bogus timeline! This journey could change history — Rufus must sign off."}
     if random.random() < 0.5:
-        return {"flagged": True, "reason": "Whoa — the Circuits of Time detected a most bogus paradox risk!"}
+        return {"flagged": True, "reason": "Whoa — the Circuits of History detected a most bogus paradox risk!"}
     return {"flagged": False, "reason": ""}
 
 

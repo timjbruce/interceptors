@@ -15,11 +15,11 @@ A small but complete, runnable demo of Temporal's interceptors, wrapped in a mos
 
 ## About the project
 
-**Wyld Stallyns Time Travel** is the phone-booth time-travel system that runs on a Temporal Workflow to control the Circuits of Time. Rufus needed a way to create a better set of controls, focused on Security, Cost Management, Observability, and Auditability without duplicating code and adding noise to his business logic. He also needed a durable execution environment, he is one person after all!
+**Wyld Stallyns Time Travel** is the phone-booth time-travel system that runs on a Temporal Workflow to control the Circuits of History. Rufus needed a way to create a better set of controls, focused on Security, Cost Management, Observability, and Auditability without duplicating code and adding noise to his business logic. He also needed a durable execution environment, he is one person after all!
 
 With Temporal, Rufus built the logic he needed to scan for paradox risk before allowing Bill and Ted to travel through time. With Interceptors, he was able to create the necessary security, audit logging, and information to help him manage costs for the project without duplicating code in his client, workflow, and activities. Even though he **is** saving his current time, he wants to do so securely and responsibly.
 
-Now all Bill and Ted need to do is to authenticate to the phone-booth, select a trip, and get on their way! Rufus can rest assured no evil twins of the pair will use the Circuits of Time and screw things up!
+Now all Bill and Ted need to do is to authenticate to the phone-booth, select a trip, and get on their way! Rufus can rest assured no evil twins of the pair will use the Circuits of History and screw things up!
 
 A web client drives the phone booth for Bill, Ted, and Rufus. With this demo, you can open up a session in each tab to simulate all the parties involved. Excellent!
 
@@ -116,7 +116,7 @@ Full build, deploy, port-forward, and teardown flow (plus the k9s tip):
 
 The first step you need to do is to authenticate as a user. In the web UI (<http://localhost:8000>), select one of the users.
 
-- Bill S. Preston, Esq. (Bill) and Ted "Theodore" Logan (Ted) can travel and will receive a JWT ([JSON Web Token](https://www.jwt.io/introduction#what-is-json-web-token)) that can be validated and will allow them to travel in the Circuits of Time. The token carries their identity as claims: a `role` (`traveler`) and a `group` (`premium` or `standard`). Bill is in the `premium` group and Ted is in the `standard` group. Group details will be discussed below.
+- Bill S. Preston, Esq. (Bill) and Ted "Theodore" Logan (Ted) can travel and will receive a JWT ([JSON Web Token](https://www.jwt.io/introduction#what-is-json-web-token)) that can be validated and will allow them to travel in the Circuits of History. The token carries their identity as claims: a `role` (`traveler`) and a `group` (`premium` or `standard`). Bill is in the `premium` group and Ted is in the `standard` group. Group details will be discussed below.
 
 - Rufus can authenticate as the administrator and receives a JWT that enables this. He can approve or deny questionable trips by Bill or Ted via his `role` (`admin`).
 

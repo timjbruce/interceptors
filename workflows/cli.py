@@ -13,6 +13,7 @@ Start the worker (./runworkflow.sh) and the backend first, then:
 """
 
 import asyncio
+import logging
 
 from temporalio.client import Client, WorkflowFailureError
 
@@ -22,6 +23,15 @@ from workflows.config import TASK_QUEUE
 from workflows.interceptors.client_auth import JWTClientInterceptor, LicenseError
 from workflows.models import TripRequest
 from workflows.workflow import ChronoTripWorkflow
+
+# Same reason as `web/app.py`: the client interceptor logs an entitlement refusal at INFO
+# and a forged licence at WARNING, and with no handler configured only the second would
+# reach the terminal. Scenarios 2 to 4 below are all refusals, so this is what makes them
+# visible.
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(filename)s:%(lineno)s | %(message)s",
+)
 
 # The token used for the *next* start_workflow call. The client interceptor's
 # get_token callback reads this, mirroring how the web app forwards each

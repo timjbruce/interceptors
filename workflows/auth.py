@@ -1,6 +1,6 @@
-"""Circuits of Time — licenses (JWTs), delegation, and token exchange.
+"""Circuits of History — licenses (JWTs), delegation, and token exchange.
 
-The Wyld Stallyns time-travel booth runs on the Circuits of Time. Every trip
+The Wyld Stallyns time-travel booth runs on the Circuits of History. Every trip
 needs a valid license; Rufus, from the future, administers the booth.
 
 ## Four kinds of token
@@ -55,7 +55,7 @@ live secrets into Event History permanently.
 
 Every caller of `verify_token` in this demo passes `now=` and so gets the expiry
 check, because every one of them runs *outside* the Workflow sandbox: the client
-interceptor, the backend, the web tier, and `activities.verify_grant` — the
+interceptor, the backend, the web tier, and `interceptors/auth_activities.verify_grant` — the
 activity the workflow-startup interceptor schedules to check the header's grant.
 
 Nothing verifies a token inside the sandbox, deliberately. Expiry needs a clock and

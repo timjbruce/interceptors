@@ -81,13 +81,13 @@ TokenSource = Callable[[], Union[Optional[str], Awaitable[Optional[str]]]]
 # is exactly what `backend/service.py` does with the same `rejection_reason` helper.
 # The one exception worth surfacing for real is **expiry**: it is actionable ("log in
 # again") and tells the holder nothing they do not already know.
-_GENERIC_REJECTION = "Bogus! A valid Circuits of Time license is required to travel."
+_GENERIC_REJECTION = "Bogus! A valid Circuits of History license is required to travel."
 _REJECTION_MESSAGES = {
-    REJECT_MISSING: "Bogus! You need a Circuits of Time license to travel. Log in first.",
-    REJECT_EXPIRED: "Whoa! Your Circuits of Time license has expired. Log in again.",
+    REJECT_MISSING: "Bogus! You need a Circuits of History license to travel. Log in first.",
+    REJECT_EXPIRED: "Whoa! Your Circuits of History license has expired. Log in again.",
     # Demo-only specificity — see the note above.
     REJECT_FORGED: (
-        "Bogus! That license is forged — the Circuits of Time know De Nomolos's "
+        "Bogus! That license is forged — the Circuits of History know De Nomolos's "
         "handiwork. Nice try, evil robot double."
     ),
 }
@@ -146,6 +146,11 @@ class _JWTOutboundInterceptor(OutboundInterceptor):
         mission = getattr(input.args[0], "mission", "") if input.args else ""
         entitlement_error = mission_entitlement_error(traveler, mission)
         if entitlement_error:
+            # INFO, not warning: a standard-group traveller asking for a premium mission
+            # is a normal business outcome, not an operational problem. The token path
+            # above logs at warning because a forged or expired licence is different in
+            # kind. Both paths log, so a refusal is never silent.
+            logger.info("[interceptor:client] refused start: %s", entitlement_error)
             raise LicenseError(entitlement_error)
 
         # 3. Mint a DELEGATION GRANT and stamp that onto the header — never the
