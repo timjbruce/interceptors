@@ -133,7 +133,24 @@ On top of this, they wanted Rufus to help implement these requirements in the ot
 
 <!-- _class: bleed -->
 
-![bg contain](images/04-two-ways-to-lose.svg)
+![bg contain](images/04-auth-standard.svg)
+
+<!--
+DRAFT NOTE, Tim's to rewrite (N8). Cue placeholder 5:00, and every cue after this slide now owes about 90 seconds.
+
+The Three Most Important People in the multiverse sent Rufus over to Security to learn about the system they had setup to help with some of the requirements. Security wasn't there to share a deep class about their model, but to help Rufus understand the work in front of him.
+
+First, they shared that their new ID provider (IdP) could vend JSON Web Tokens or JWTs (JOTs). These tokens were signed by the IdP and could be validated then trusted. JWTs identify who the person or system is, what groups they belong to, and what other claims the person might have, such as scope. A JWT is a credential. Groups are used, in this system, to identify Premium and Standard users. You can also have an Admin role that allows you to approve missions. The UI can check the group for what they can do.
+
+Next, in our security, you can't just pass a JWT from the UI to the workflow to the backend system. This exposes the user's credential to a number of people and actors and we don't want that. So your client needs to request a delegation grant from the IdP. A delegation grant is a different token with fields to denote that, specifically, the worker is allowed to exchange the delegation grant for an access token to act on behalf of the traveler. The worker can then use the access token to access the Circuits of History systems, as the traveler.
+
+-->
+
+---
+
+<!-- _class: bleed -->
+
+![bg contain](images/05-two-ways-to-lose.svg)
 
 <!--
 5:30 - 
@@ -152,7 +169,7 @@ Neither of these issues was a durability problem or a missing requirement for tr
 
 <!-- _class: bleed -->
 
-![bg contain](images/05-every-workflow.svg)
+![bg contain](images/06-every-workflow.svg)
 
 <!--
 7:00 - Rufus also looked at the 6th requirment - solving these problems for all the other workflows that ran in the future. Rufus pondered about what to do for a little bit. He knew the answer was not to simply add code to all of these workflows, even using helper libraries. He couldn't promise that all the helper functions would be called at all the right points to pass and record the data that was needed. Also, there would be a lot of activity signatures that needed updating. It was a mess.
@@ -167,7 +184,7 @@ Being the most excellent architect that he was, Rufus did some research using Te
 
 <!-- _class: bleed -->
 
-![bg contain](images/06-middleware.svg)
+![bg contain](images/07-middleware.svg)
 
 <!--
 8:15 - Unsurprisingly, the AI Assistant came back with the answer of Interceptors. According to Temporal's documentation, Interceptors are SDK hooks that let you intercept inbound and outbound Temporal calls. Let's take a look at this in a graphical format to see what it means.
@@ -185,7 +202,7 @@ Rufus then started to dig further on what he needed to understand about intercep
 
 <!-- _class: bleed -->
 
-![bg contain](images/07-five-seams.svg)
+![bg contain](images/08-five-categories.svg)
 
 <!--
 10:00 - 
@@ -204,7 +221,7 @@ Then Rufus listed questions he felt everyone should know - what is safe to use w
 
 <!-- _class: bleed -->
 
-![bg contain](images/08-how-to-build.svg)
+![bg contain](images/09-how-to-build.svg)
 
 <!--
 12:30
@@ -227,7 +244,7 @@ An important note is that the Interceptors will register and run in order they a
 
 <!-- _class: bleed -->
 
-![bg contain](images/09-should-it-be-an-interceptor.svg)
+![bg contain](images/10-should-it-be-an-interceptor.svg)
 
 
 
@@ -245,7 +262,7 @@ But remember that interceptors are not free. There can be overhead in debugging 
 
 <!-- _class: bleed -->
 
-![bg contain](images/10-terms-to-interceptors.svg)
+![bg contain](images/11-terms-to-interceptors.svg)
 
 <!--
 15:30 - 
@@ -266,7 +283,7 @@ Note that Rufus also needed an activity to validate the grant during the workflo
 
 <!-- _class: bleed -->
 
-![bg contain](images/11-one-booking-six.svg)
+![bg contain](images/12-one-booking-six.svg)
 
 <!--
 
@@ -359,7 +376,7 @@ Finally, the other delta in this use case is that the approval could happen hour
 
 <!-- _class: bleed -->
 
-![bg contain](images/12-other-systems.svg)
+![bg contain](images/13-other-systems.svg)
 
 <!--
 30:00 - 
@@ -372,7 +389,7 @@ Requirement 6 said every system, so Rufus went and told the rest of IT. You've h
 
 <!-- _class: bleed -->
 
-![bg contain](images/13-what-shipped.svg)
+![bg contain](images/14-what-shipped.svg)
 
 <!--
 32:00 - Six non-functional requirements, met where each could be met. Seven files. Just two wiring points, the client and the worker. No need to update the workflow and activities to include all of the data passing and plumbing.
@@ -383,7 +400,7 @@ Requirement 6 said every system, so Rufus went and told the rest of IT. You've h
 
 <!-- _class: bleed -->
 
-![bg contain](images/14-questions.svg)
+![bg contain](images/15-questions.svg)
 
 <!--
 33:30 - Questions

@@ -26,9 +26,10 @@ one can never be mistaken for another:
     actor token. `sub` is the *user*, and `act` names the *worker*: "worker W acting
     on behalf of user U." Audience-restricted to the backend.
 
-`exchange_token()` is the authorization-server half of that flow. It lives here so
-the demo needs one fewer process; in production it is your IdP's token endpoint, on
-a different host, holding a key the resource server never sees.
+`mint_delegation_grant()` and `exchange_token()` are the authorization-server half of
+that flow, reached over HTTP at `/oauth2/grant` and `/oauth2/token`. They live in this
+module so the demo needs one fewer process; in production they are your IdP's, on a
+different host, holding a key the resource server never sees.
 
 ## Why this shape, for Temporal specifically
 
@@ -317,8 +318,10 @@ def mint_delegation_grant(
     backend, and it cannot be replayed against the web app as the user (the web tier
     requires a `subject` token). That is the whole trade — long-lived, but useless.
 
-    Minted here by the client interceptor because the demo has no IdP. In production
-    the client would *request* this from the authorization server.
+    Signed by the authorization server, never by the client: the client interceptor
+    requests one at `POST /oauth2/grant` (`backend/service.py`) and only stamps what
+    comes back. A client able to mint its own grants could name any subject it liked,
+    which is the whole reason this function lives on the IdP's side of the demo.
     """
     issued = time.time() if now is None else now
     return _encode(

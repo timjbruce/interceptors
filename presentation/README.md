@@ -4,7 +4,7 @@ A 45-minute, story-first talk built on this repo's demo. Rufus is sent to save t
 universe, the business hands him six requirements, and interceptors are how he meets all
 six without touching business logic.
 
-**19 slides.** Twelve for the story, four for the demo, three to close. Technical depth
+**20 slides.** Thirteen for the story, four for the demo, three to close. Technical depth
 lives in the speaker notes and in the repo, deliberately not on the slides.
 
 - [`interceptors-story.md`](interceptors-story.md) is the deck (Marp markdown, 16:9).
@@ -48,23 +48,32 @@ The generator deletes any SVG it no longer produces, so stale files cannot linge
 | 2 | San Dimas, 2691 | Rufus built the Circuits of History on Temporal, and nothing has beaten it since |
 | 3 | 2687: the software that saved a universe | Rufus built it a year before he went back; a simple workflow |
 | 4 | The next universe | **the six business requirements**, the spine of the talk |
-| 5 | Why the requirements exist | the robot doubles, and Napoleon at the water park |
-| 6 | Requirement 6: every system | every workflow and every activity inside it, and an open question |
-| 7 | Rufus already knew the answer | an interceptor is middleware: A, B, the real work, B, A |
-| 8 | Five places to hook in | the same four questions asked at each one |
-| 9 | How to build one | the three moves, on real code from the repo |
-| 10 | When to reach for one | five signals, and three things that are somebody else's job |
-| 11 | Six business requirements, six interceptors | the mapping, **and the answer to slide 6** |
-| 12 | One booking, all six | firing order, and zero lines in `workflow.py` |
-| 13-16 | Demo 1 to 4 | one business requirement per run, drawn on the workflow |
-| 17 | Then Rufus told the rest of IT | six more uses for the same five places |
-| 18 | What Rufus shipped | four numbers and the question to take home |
-| 19 | Questions | the repo link and where to read next |
+| 5 | The standard for authentication and authorization | **the three credentials**, and the only one that opens a door |
+| 6 | Why the requirements exist | the robot doubles, and Napoleon at the water park |
+| 7 | Requirement 6: every system | every workflow and every activity inside it, and an open question |
+| 8 | Rufus already knew the answer | an interceptor is middleware: A, B, the real work, B, A |
+| 9 | Five places to hook in | the same four questions asked at each one |
+| 10 | How to build one | the three moves, on real code from the repo |
+| 11 | When to reach for one | five signals, and three things that are somebody else's job |
+| 12 | Six business requirements, six interceptors | the mapping, **and the answer to slide 7** |
+| 13 | One booking, all six | firing order, and zero lines in `workflow.py` |
+| 14-17 | Demo 1 to 4 | one business requirement per run, drawn on the workflow |
+| 18 | Then Rufus told the rest of IT | six more uses for the same five places |
+| 19 | What Rufus shipped | four numbers and the question to take home |
+| 20 | Questions | the repo link and where to read next |
 
-Slide 6 deliberately does not answer its own question. Interceptors are not defined
-until slide 7, and "wired in once" arrives on slide 9.
+Slide 5 is the vocabulary the rest of the deck spends: license, grant, access token, and
+the claims that decide something on each. It sits with the business requirements, not with
+Rufus's answer, because requirements 1, 2, 3 and 5 are all asking for one of them. It is
+written to be lifted out of the deck and used as the standard on its own.
 
-Slides 7 to 10 run what, where, how, when: what an interceptor is, where you can use
+Three credentials, not four. The group is a claim the license carries, not a credential of
+its own, and the slide draws it that way on purpose.
+
+Slide 7 deliberately does not answer its own question. Interceptors are not defined
+until slide 8, and "wired in once" arrives on slide 10.
+
+Slides 8 to 11 run what, where, how, when: what an interceptor is, where you can use
 one, how you build them, then whether you should.
 
 ## Timing
@@ -72,20 +81,24 @@ one, how you build them, then whether you should.
 | Block | Slides | Minutes |
 |---|---|---|
 | Title and frame | 1 | 1 |
-| The world, the requirements, the risk | 2-6 | 9 |
-| What interceptors are, where they go, whether to use one | 7-10 | 6 |
-| One booking, all six | 12 | 2 |
-| Demo | 13-16 | 10 |
-| Close | 17-18 | 3 |
-| Questions | 19 | ~13 |
+| The world, the requirements, the risk | 2-4, 6-7 | 9 |
+| The credentials standard | 5 | 1.5 |
+| What interceptors are, where they go, whether to use one | 8-11 | 6 |
+| One booking, all six | 13 | 2 |
+| Demo | 14-17 | 10 |
+| Close | 18-19 | 3 |
+| Questions | 20 | ~13 |
 
-The 6 minutes on the interceptors block now covers **five** slides rather than three:
-slide 9 (how to build one) and slide 10 (when to reach for one) were both added after this
-budget was set. Re-time it or take the minutes from elsewhere. This is now two slides
-over, not one, and needs a real answer before delivery.
+The 6 minutes on the interceptors block now covers **four** slides rather than three:
+slide 10 (how to build one) and slide 11 (when to reach for one) were both added after this
+budget was set, and slide 5 (the credentials standard) added a fourth story slide on top.
+The row above gives slide 5 its own 1.5 minutes, which the table did not have to spare, so
+the total is over and the minutes have to come from somewhere. Re-time it or cut, but do it
+before delivery rather than in the room.
 
-Running long? Cut **demo 3** (see what happened) first, then slide 17. Never cut slide 4
-(the six requirements), slide 11 (the mapping) or slide 12. They are the spine.
+Running long? Cut **demo 3** (see what happened) first, then slide 18. Never cut slide 4
+(the six requirements), slide 5 (the credentials standard), slide 12 (the mapping) or
+slide 13. They are the spine.
 
 The demo slides carry no expected output. The terminals are on screen anyway, so the
 "point at this line" detail lives in the runbook below.
@@ -104,7 +117,7 @@ The demo slides carry no expected output. The terminals are on screen anyway, so
 Characters are caricatures recognized by props, not likeness: Bill's curly blond mop and
 the horse head on his vest, Ted's long dark hair and vest, Rufus's long coat, beard and
 guitar, the doubles' plated faces and red eyes, Napoleon's bicorne. The Temporal mark on
-slides 1, 2 and 19 is the one from `web/static/temporal.svg`.
+slides 1, 2 and 20 is the one from `web/static/temporal.svg`.
 
 Bill's horse head is the chess-knight glyph `&#9816;` (U+2658) set as text, not a drawn
 path: a hand-drawn horse at that size reads as a cat. It therefore depends on a system
@@ -146,7 +159,7 @@ Then:
   path. Note that it consumes `chrono-trip-bill`, so let it finish before rebooking as
   Bill.
 
-### Run 1: run a cleared mission, and act for the traveler *(slide 13, ~2.5 min)*
+### Run 1: run a cleared mission, and act for the traveler *(slide 14, ~2.5 min)*
 
 Requirements 2 and 5.
 
@@ -167,7 +180,7 @@ Backend log:
 *Optional:* Temporal UI, the run, `WorkflowExecutionStarted`, `Header`. The
 `delegation-grant` value deliberately does not match the browser's token.
 
-### Run 2: refuse a mission the traveler is not cleared for *(slide 14, ~1.5 min)*
+### Run 2: refuse a mission the traveler is not cleared for *(slide 15, ~1.5 min)*
 
 Requirement 2.
 
@@ -193,7 +206,7 @@ No client interceptor means no grant on the header, so the workflow-edge guardra
 the run with a non-retryable `InvalidDelegationGrant`, before any business activity or
 backend call.
 
-### Run 3: see what happened on a trip *(slide 15, ~2 min, cut this one first)*
+### Run 3: see what happened on a trip *(slide 16, ~2 min, cut this one first)*
 
 Requirement 4.
 
@@ -208,7 +221,7 @@ Requirement 4.
 temporal workflow list --query "Traveler = 'Ted \"Theodore\" Logan'"
 ```
 
-### Run 4: prove who approved a questionable trip *(slide 16, ~3 min)*
+### Run 4: prove who approved a questionable trip *(slide 17, ~3 min)*
 
 Requirement 3, and the best story of the four.
 
@@ -238,7 +251,7 @@ Two things to point at:
 
 ## Images
 
-Deck images are `00`-`14` plus `demo1`-`demo4`, in slide order. File `00` is slide 1, so a
+Deck images are `00`-`15` plus `demo1`-`demo4`, in slide order. File `00` is slide 1, so a
 numbered file's slide number is one higher than its number, up to the demos. Every SVG in `images/` is
 on a slide; there are no spares. An earlier round generated one panel per interceptor for
 a longer version of the talk, and those were deleted rather than left lying around, so a
@@ -246,7 +259,7 @@ file appearing here without a slide means something is stale.
 
 Color carries meaning across the whole deck: **magenta** is a client interceptor,
 **amber** a workflow interceptor, **cyan** an activity interceptor, and **purple** one
-that spans workflow and activity. Slide 8 introduces the scheme and doubles as its
+that spans workflow and activity. Slide 9 introduces the scheme and doubles as its
 legend. State (fired, refused, unused) is carried by fill and dashes instead, so the two
 signals never compete.
 

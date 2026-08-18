@@ -50,13 +50,16 @@ from workflows.auth import (
     ACCESS_TTL,
     BACKEND_AUDIENCE,
     EXCHANGE_GRANT_TYPE,
+    GRANT_TTL,
     SUBJECT_TTL,
     TOKEN_TYPE_ACCESS,
     TOKEN_TYPE_JWT,
     USE_ACCESS,
     USE_SUBJECT,
+    WORKER_IDENTITY,
     bearer_token,
     exchange_token,
+    mint_delegation_grant,
     mission_entitlement_error,
     refresh_session_token,
     rejection_reason,
@@ -147,6 +150,59 @@ def _oauth_error(code: str, description: str, endpoint: str = "oauth2/token"):
         content={"error": code, "error_description": description},
         # RFC 6749 §5.1: responses carrying tokens must not be cached. Applied to the
         # error path too, so a proxy can't serve a stale answer either.
+        headers={"Cache-Control": "no-cache, no-store", "Pragma": "no-cache"},
+    )
+
+
+@app.post("/oauth2/grant")
+async def issue_delegation_grant(authorization: Optional[str] = Header(default=None)):
+    """Issue a delegation grant for the authenticated traveler. The IdP's half.
+
+    First stop in the credential chain, and the only one the *client* interceptor
+    talks to: it presents the traveler's session license and gets back a grant it can
+    stamp on the Temporal header (`client_auth.py`). The worker later redeems that
+    grant at `/oauth2/token` above.
+
+    **The caller does not get to name the actor.** `may_act` is set from this service's
+    own `WORKER_IDENTITY`, never from the request, because a client that could choose
+    who may act on its behalf could hand its user's identity to any workload it liked.
+    A real authorization server takes a requested actor and checks it against policy;
+    the simplification here is that there is exactly one worker to allow.
+
+    Credential in the `Authorization` header rather than the body, unlike
+    `/oauth2/refresh` below: that endpoint deliberately accepts an *expired* license,
+    which is a thing you submit, not a credential you can present. This one requires a
+    live license, so it is presented like any other.
+
+    401, not 400: this is a request whose credential failed, so the caller is being
+    challenged. Contrast `_oauth_error`, which reports a bad grant at the token
+    endpoint as 400. The reason is logged and never returned, the same disclosure
+    policy as `_authorize`.
+    """
+    token = bearer_token(authorization)
+    now = time.time()
+    checks = dict(now=now, expect_use=USE_SUBJECT)
+    traveler = verify_token(token, **checks)
+    if traveler is None:
+        logger.warning(
+            "[backend] 401 on oauth2/grant (%s)", rejection_reason(token, **checks)
+        )
+        raise HTTPException(
+            status_code=401,
+            detail="Bogus! A valid Circuits of History license is required.",
+        )
+
+    grant = mint_delegation_grant(traveler)
+    logger.info(
+        "[backend] issued delegation grant — traveler=%s may_act=%s ttl=%ss",
+        traveler["id"], WORKER_IDENTITY, GRANT_TTL,
+    )
+    # No `token_type`. The two endpoints that return real credentials say "Bearer"
+    # because that is how they are spent; a grant is spent by being exchanged, not by
+    # being presented, so claiming Bearer here would invite exactly the misuse the
+    # audience restriction exists to prevent.
+    return JSONResponse(
+        content={"delegation_grant": grant, "expires_in": GRANT_TTL},
         headers={"Cache-Control": "no-cache, no-store", "Pragma": "no-cache"},
     )
 

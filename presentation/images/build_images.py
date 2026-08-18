@@ -7,11 +7,10 @@ one system.
 
     python3 presentation/images/build_images.py
 
-Two sets are produced:
-
-  * `00`-`13` plus `demo1`-`demo4`: the deck. This is the talk.
-  * `x-*`: spares, kept for a longer version (one slide per interceptor, plus the
-    audit and traceability problem panels). Not referenced by the deck.
+One set is produced: `00`-`15` plus `demo1`-`demo4`, in slide order. This is the
+talk, and there are no spares. A numbered file's slide number is one higher than its
+number, so `00-title` is slide 1. Anything in the directory that this file no longer
+produces is deleted on the next run.
 
 Characters are caricatures, recognized by props rather than likeness: Bill's blond
 spikes, Ted's dark hair and headband, Rufus's long coat and beard, the robot
@@ -802,7 +801,99 @@ def img_03_next_universe():
     return s
 
 
-def img_04_two_ways_to_lose():
+def img_04_auth_standard():
+    """Slide 5: the three credentials, drawn so the slide can be lifted out of the deck
+    and used as the standard for authentication and authorization.
+
+    Placed straight after the six requirements (Tim, 2026-08-18) rather than after
+    requirement 6, because requirements 1, 2, 3 and 5 all spend this vocabulary and
+    nothing in the deck defines it before the demos use it.
+
+    **Three rows, not four.** The first draft listed the group as a fourth credential
+    next to the license, which is a category error: nothing separate is issued, held or
+    presented, and its own lifetime column had to read "same license" to admit it (Tim
+    caught this 2026-08-18). The group is a *claim* the license carries, so it now
+    appears in the claims column in the same visual language as `aud` and `may_act`.
+    That column is the point of the slide: each credential next to the claims that
+    actually decide something.
+
+    Deliberately drawn without the interceptor category hues. The legend that gives
+    magenta, amber, cyan and purple their meaning does not arrive until slide 8, so a
+    credential coloured amber here would be misread as a workflow interceptor there.
+    Green marks the one row the slide exists to isolate: the only credential that opens
+    a door.
+    """
+    s = head()
+    s += slide_title("The standard for authentication and authorization",
+                     "Three credentials, three jobs. Only one of them opens a door.",
+                     accent=OK)
+
+    X_WHEN, X_CRED, X_CLAIM, X_LIFE, X_DOOR = 112, 268, 606, 1000, 1170
+    s += text(X_WHEN, 174, "WHEN", size=12, fill=MUTED, weight=700, spacing=1.2)
+    s += text(X_CRED, 174, "CREDENTIAL", size=12, fill=MUTED, weight=700, spacing=1.2)
+    s += text(X_CLAIM, 174, "THE CLAIMS THAT DECIDE", size=12, fill=MUTED, weight=700,
+              spacing=1.2)
+    s += text(X_LIFE, 174, "LIFETIME", size=12, fill=MUTED, weight=700, spacing=1.2,
+              anchor="middle")
+    s += text(X_DOOR, 174, "OPENS A DOOR", size=12, fill=MUTED, weight=700, spacing=1.2,
+              anchor="end")
+
+    rows = [
+        ("AT LOGIN", "session license", "A signed JWT. This traveler is here now.",
+         [("sub", "who is here"), ("group", "what they may run")], "15 min", False),
+        ("ON THE HEADER", "delegation grant", "Who a service may act for, later.",
+         [("aud", "the token endpoint, only"), ("may_act", "one named worker")],
+         "8 hours", False),
+        ("AT THE CALL", "access token", "This call, this service, this traveler.",
+         [("sub + act", "the traveler, and the worker"), ("aud", "the backend")],
+         "2 min", True),
+    ]
+
+    y = 190
+    for when, name, settles, claims, life, door in rows:
+        accent = OK if door else LINE
+        s += panel(88, y, 1104, 112, accent=accent, fill=PANEL, r=12,
+                   fill_op=0.95 if door else 0.8, sw=1.8 if door else 1.4)
+        s += (f'<rect x="88" y="{y}" width="4" height="112" rx="2" '
+              f'fill="{OK if door else MUTED}"/>\n')
+        s += text(X_WHEN, y + 62, when, size=13, fill=MUTED, weight=700, spacing=1.0)
+
+        s += text(X_CRED, y + 44, name, size=20, weight=700, mono=True,
+                  fill=OK if door else INK)
+        for j, line in enumerate(wrap(settles, 34)):
+            s += text(X_CRED, y + 72 + j * 22, line, size=15, fill=INK, op=0.85)
+
+        # The claims, in one visual language. `group` sits here rather than in a row of
+        # its own precisely because it is the same kind of thing as `aud` and `may_act`.
+        cy = y + 42
+        for claim, gloss in claims:
+            # Ink and muted, not cyan: cyan is the activity-interceptor hue four slides
+            # from here, and a claim name is not a category.
+            s += text(X_CLAIM, cy, claim, size=15, mono=True, weight=700,
+                      fill=OK if door else INK)
+            s += text(X_CLAIM + 108, cy, gloss, size=15, fill=MUTED)
+            cy += 30
+
+        s += text(X_LIFE, y + 62, life, size=16, mono=True, anchor="middle", weight=600,
+                  fill=OK if door else INK, op=0.9)
+        if door:
+            s += mark(X_DOOR - 17, y + 56, "ok", r=17)
+        else:
+            s += text(X_DOOR, y + 62, "no", size=16, mono=True, anchor="end", fill=MUTED)
+        y += 126
+
+    s += note_only(88, y + 2, 1104, [
+        "The license carries the group. What that group is allowed to run is our policy, not "
+        "the token's.",
+        "The grant opens nothing at all: audience-locked to the token endpoint, redeemable by "
+        "one named worker.",
+        "Only the exchanged access token opens a door, and only for the two minutes the call "
+        "needs.",
+    ], color=OK, title="THE RULE, WHEREVER THIS RUNS", size=16, lh=22, pad=13)
+    return s
+
+
+def img_05_two_ways_to_lose():
     s = head()
     s += slide_title("Why the requirements exist",
                      "Two things that already happened. Both nearly cost everyone the future.",
@@ -844,7 +935,7 @@ def img_04_two_ways_to_lose():
     return s
 
 
-def img_05_every_workflow():
+def img_06_every_workflow():
     s = head()
     s += slide_title("Requirement 6: every system, not just the booth",
                      "The Circuits of History is one workflow out of forty-eight.", accent=WARN)
@@ -880,7 +971,7 @@ def img_05_every_workflow():
     return s
 
 
-def img_06_middleware():
+def img_07_middleware():
     s = head()
     s += slide_title("Rufus needed to research the answer",
                      "on to Temporal's AI Developer Skill", accent=CYAN)
@@ -919,7 +1010,7 @@ def img_06_middleware():
     return s
 
 
-def img_07_five_seams():
+def img_08_five_categories():
     s = head()
     s += slide_title("Five places to hook in",
                      "Where the call happens decides what you are allowed to do about it.",
@@ -951,8 +1042,8 @@ def img_07_five_seams():
     return s
 
 
-def img_08_how_to_build():
-    """Slide 9: the three moves that make an interceptor.
+def img_09_how_to_build():
+    """Slide 10: the three moves that make an interceptor.
 
     The code is `workflows/interceptors/workflow_audit.py` with the argument summary
     dropped, so what is on the slide is what is in the repo. The circled numbers on the
@@ -1030,8 +1121,8 @@ def img_08_how_to_build():
     return s
 
 
-def img_09_should_it_be():
-    """Slide 10: guidance on when to consider an interceptor.
+def img_10_should_it_be():
+    """Slide 11: guidance on when to consider an interceptor.
 
     Deliberately not a decision tree. The earlier version was one, and a tree forces every
     item to be a gate with a single path through, which these are not: they are independent
@@ -1089,7 +1180,7 @@ def img_09_should_it_be():
     return s
 
 
-def img_10_terms_to_interceptors():
+def img_11_terms_to_interceptors():
     s = head()
     s += slide_title("Six business requirements, six interceptors",
                      "One file each. None of it in the workflow.", accent=OK)
@@ -1127,7 +1218,7 @@ def img_10_terms_to_interceptors():
     return s
 
 
-def img_11_one_booking():
+def img_12_one_booking():
     s = head()
     s += slide_title("One booking, all six",
                      "In firing order. No workflow or activity code decides any of it.",
@@ -1165,7 +1256,7 @@ def img_11_one_booking():
     return s
 
 
-def img_12_other_systems():
+def img_13_other_systems():
     s = head()
     s += slide_title("Then Rufus told the rest of IT",
                      "Same five places to hook in. Every other system had similar requirements.",
@@ -1378,7 +1469,7 @@ def img_demo4():
 # ---------------------------------------------------------------------------
 
 
-def img_13_what_shipped():
+def img_14_what_shipped():
     s = head()
     s += slide_title("What Rufus shipped",
                      "Six business requirements met. The original workflow, unchanged.", accent=OK)
@@ -1413,7 +1504,7 @@ def img_13_what_shipped():
     return s
 
 
-def img_14_questions():
+def img_15_questions():
     s = head()
     s += slide_title("Questions", "And where to go deeper.", accent=CYAN)
 
@@ -1452,17 +1543,18 @@ IMAGES = {
     "01-san-dimas-2691": img_01_san_dimas,
     "02-v1-no-auth": img_02_v1_no_auth,
     "03-next-universe": img_03_next_universe,
-    "04-two-ways-to-lose": img_04_two_ways_to_lose,
-    "05-every-workflow": img_05_every_workflow,
-    "06-middleware": img_06_middleware,
-    "07-five-seams": img_07_five_seams,
-    "08-how-to-build": img_08_how_to_build,
-    "09-should-it-be-an-interceptor": img_09_should_it_be,
-    "10-terms-to-interceptors": img_10_terms_to_interceptors,
-    "11-one-booking-six": img_11_one_booking,
-    "12-other-systems": img_12_other_systems,
-    "13-what-shipped": img_13_what_shipped,
-    "14-questions": img_14_questions,
+    "04-auth-standard": img_04_auth_standard,
+    "05-two-ways-to-lose": img_05_two_ways_to_lose,
+    "06-every-workflow": img_06_every_workflow,
+    "07-middleware": img_07_middleware,
+    "08-five-categories": img_08_five_categories,
+    "09-how-to-build": img_09_how_to_build,
+    "10-should-it-be-an-interceptor": img_10_should_it_be,
+    "11-terms-to-interceptors": img_11_terms_to_interceptors,
+    "12-one-booking-six": img_12_one_booking,
+    "13-other-systems": img_13_other_systems,
+    "14-what-shipped": img_14_what_shipped,
+    "15-questions": img_15_questions,
     "demo1-premium-approved": img_demo1,
     "demo2-not-entitled": img_demo2,
     "demo3-clean-trip": img_demo3,

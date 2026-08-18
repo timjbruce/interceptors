@@ -8,13 +8,15 @@ the request leaves for the Temporal service, and on every `start_workflow` it:
      bad request never becomes a (billable) Workflow Execution.
   2. **Enforces business entitlement** — some missions are premium-only
      (`mission_entitlement_error`), rejected here too.
-  3. **Mints a delegation grant** and stamps *that* onto the Temporal header, so the
-     workflow and its activities can act on the user's behalf without ever holding
-     the user's own credential.
+  3. **Requests a delegation grant** from the IdP and stamps *that* onto the Temporal
+     header, so the workflow and its activities can act on the user's behalf without
+     ever holding the user's own credential.
 
 Client interceptors are the right home for all three: they run outside the Workflow
-sandbox, so a clock (expiry) and real I/O (a JWKS fetch, or requesting the grant
-from a real IdP) are legal here, and rejecting early avoids the billed start.
+sandbox, so a clock (expiry) and real I/O (the grant request, a JWKS fetch, a token
+refresh) are legal here, and rejecting early avoids the billed start. Step 3 is the
+clearest demonstration of that: it is a live HTTP round trip inside an interceptor,
+and the identical call from a *workflow* interceptor would be a determinism bug.
 
 Step 3 is the security-critical one. The header's value is persisted in Event
 History forever, so it must be something that cannot be replayed — see
@@ -43,6 +45,7 @@ import logging
 import time
 from typing import Awaitable, Callable, Optional, Union
 
+import httpx
 import temporalio.converter
 from temporalio.client import (
     Interceptor,
@@ -56,11 +59,11 @@ from workflows.auth import (
     REJECT_FORGED,
     REJECT_MISSING,
     USE_SUBJECT,
-    mint_delegation_grant,
     mission_entitlement_error,
     rejection_reason,
     verify_token,
 )
+from workflows.config import BACKEND_URL
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +85,14 @@ TokenSource = Callable[[], Union[Optional[str], Awaitable[Optional[str]]]]
 # The one exception worth surfacing for real is **expiry**: it is actionable ("log in
 # again") and tells the holder nothing they do not already know.
 _GENERIC_REJECTION = "Bogus! A valid Circuits of History license is required to travel."
+
+# The license passed, but the IdP would not hand back a grant. Distinct from the
+# rejections above: nothing is wrong with the traveller, so the message says so and
+# invites a retry rather than a login.
+_GRANT_UNAVAILABLE = (
+    "Whoa! The Circuits of History could not issue a travel grant right now. "
+    "Try booking again in a moment."
+)
 _REJECTION_MESSAGES = {
     REJECT_MISSING: "Bogus! You need a Circuits of History license to travel. Log in first.",
     REJECT_EXPIRED: "Whoa! Your Circuits of History license has expired. Log in again.",
@@ -153,8 +164,8 @@ class _JWTOutboundInterceptor(OutboundInterceptor):
             logger.info("[interceptor:client] refused start: %s", entitlement_error)
             raise LicenseError(entitlement_error)
 
-        # 3. Mint a DELEGATION GRANT and stamp that onto the header — never the
-        #    user's session token.
+        # 3. Ask the IdP for a DELEGATION GRANT and stamp that onto the header —
+        #    never the user's session token.
         #
         #    Two reasons, and both matter:
         #      * Lifetime. A trip can wait hours on Rufus's review; the user's
@@ -166,10 +177,55 @@ class _JWTOutboundInterceptor(OutboundInterceptor):
         #        access. The session token would be replayable against this very web
         #        app as the user. A grant is not: its audience is the token endpoint,
         #        and only the named worker may redeem it.
-        grant = mint_delegation_grant(traveler)
+        grant = await _request_grant(token, traveler)
         payload_converter = temporalio.converter.default().payload_converter
         input.headers = {
             **(input.headers or {}),
             GRANT_HEADER_KEY: payload_converter.to_payload(grant),
         }
         return await super().start_workflow(input)
+
+
+async def _request_grant(token: str, traveler: dict) -> str:
+    """Exchange the traveler's verified license for a delegation grant at the IdP.
+
+    Real network I/O, from inside an interceptor, on the booking path. Legal here for
+    the same reason the expiry check is: a client interceptor runs in your own process,
+    outside the Workflow sandbox. The grant is deliberately *not* minted locally —
+    signing is the authorization server's job, and a client that could mint its own
+    grants could name any subject it liked.
+
+    A failure raises `LicenseError`, which the web app and CLI already render as a
+    refused booking. That is the right outcome even though nothing is wrong with the
+    license: no grant means the activities would have nothing to redeem, so starting
+    the workflow would only produce a trip that cannot call the backend — a billed
+    Action for a run that is already doomed.
+    """
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.post(
+                f"{BACKEND_URL}/oauth2/grant",
+                headers={"Authorization": f"Bearer {token}"},
+            )
+    except Exception as exc:
+        logger.warning("[interceptor:client] grant endpoint unreachable: %s", exc)
+        raise LicenseError(_GRANT_UNAVAILABLE) from exc
+
+    if resp.status_code != 200:
+        # The endpoint verified the same license this interceptor just accepted, so a
+        # refusal here means the two disagree — a clock skew, or a key rotation. Worth
+        # a warning rather than an info line.
+        logger.warning(
+            "[interceptor:client] grant refused for %s: HTTP %s",
+            traveler["id"], resp.status_code,
+        )
+        raise LicenseError(_GRANT_UNAVAILABLE)
+
+    grant = (resp.json() or {}).get("delegation_grant")
+    if not grant:
+        logger.warning("[interceptor:client] grant response carried no grant")
+        raise LicenseError(_GRANT_UNAVAILABLE)
+    logger.info(
+        "[interceptor:client] grant issued for %s, stamped on the header", traveler["id"]
+    )
+    return grant
