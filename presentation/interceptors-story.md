@@ -74,11 +74,13 @@ Runbook: presentation/README.md
 
 I'm here to talk to you about Temporal interceptors. Before we begin, I want to call out something that I loved to hear when I started here. I've heard us say we  want to keep the "glue code" out of your workflows, and get stuff like retries, queues, and timers from Temporal. Well, businesses have their own "glue code", too. You might see it in non-functional requirements.
 
-These non-functional requirements come in many forms - business rules, ensuring security, improving traceability and audit, and a wide variety of things. Rather than just share a tech demo with you, I want to tell you a story about a totally excellent dude and architect named Rufus, who is set to save universes.
+What I found through building this is that Interceptors are great for businesses to keep their own glue code out of workflows.
+
+Rather than just share a tech demo with you, I want to tell you a story about a totally excellent dude and architect named Rufus, who is set to save universes.
 
 If you have any questions, feel free to come off mute and ask them.
 
-Before we begin: how many of you have run interceptors before? How about have built them?
+So, how many of you have run interceptors before? How about have built them?
 
 -->
 

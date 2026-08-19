@@ -20,7 +20,10 @@ from workflows.interceptors.activity_logging import ActivityLoggingInterceptor
 from workflows.interceptors.grant_propagation import GrantPropagationInterceptor
 from workflows.interceptors.token_exchange import TokenExchangeInterceptor
 from workflows.interceptors.workflow_audit import WorkflowAuditInterceptor
-from workflows.interceptors.workflow_startup import WorkflowStartupInterceptor
+from workflows.interceptors.workflow_startup import (
+    WorkflowStartupInterceptor,
+    install_correlation_logging,
+)
 from workflows.workflow import ChronoTripWorkflow
 
 logger = logging.getLogger("temporal.worker")
@@ -28,8 +31,15 @@ logger = logging.getLogger("temporal.worker")
 async def main() -> None:
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(filename)s:%(lineno)s | %(message)s",
+        # `correlation_id` is supplied by the filter installed below, on every record,
+        # so a line written by code that knows nothing about the trip still carries its
+        # id. Lines logged outside a trip show the filter's placeholder.
+        format=(
+            "%(asctime)s | %(levelname)s | %(correlation_id)s | "
+            "%(filename)s:%(lineno)s | %(message)s"
+        ),
     )
+    install_correlation_logging()
     client = await connect()
     print(f"Connecting to Temporal at {TEMPORAL_ADDRESS} (namespace: {TEMPORAL_NAMESPACE})")
     print(f"Worker starting on task queue '{TASK_QUEUE}'...")

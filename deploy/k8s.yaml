@@ -107,7 +107,7 @@ spec:
             # Must match the web Deployment — both encrypt and decrypt the same
             # payloads, so a mismatch fails at decode with a confusing error.
             - name: ENCRYPT_PAYLOADS
-              value: "true"
+              value: "false"
           resources:
             requests: { cpu: 50m, memory: 64Mi }
             limits: { memory: 256Mi }
@@ -154,7 +154,7 @@ spec:
             - name: BACKEND_URL
               value: http://interceptors-backend:9000
             - name: ENCRYPT_PAYLOADS
-              value: "true"
+              value: "false"
           resources:
             requests: { cpu: 50m, memory: 64Mi }
             limits: { memory: 256Mi }

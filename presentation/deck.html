@@ -5354,21 +5354,9 @@ On top of this, they wanted Rufus to help implement these requirements in the ot
 
 The Three Most Important People in the multiverse sent Rufus over to Security to learn about the system they had setup to help with some of the requirements. Security wasn't there to share a deep class about their model, but to help Rufus understand the work in front of him.
 
-First, they shared that their new ID provider (IdP) could vend JSON Web Tokens or JWTs (JOTs). These tokens were signed by the IdP and could be validated then trusted. JWTs identify who the person or system is, what groups they belong to, and what other claims the person might have, such as scope.
+First, they shared that their new ID provider (IdP) could vend JSON Web Tokens or JWTs (JOTs). These tokens were signed by the IdP and could be validated then trusted. JWTs identify who the person or system is, what groups they belong to, and what other claims the person might have, such as scope. A JWT is a credential. Groups are used, in this system, to identify Premium and Standard users. You can also have an Admin role that allows you to approve missions. The UI can check the group for what they can do.
 
-&lt;TODO: What is a Group Claim?&gt;
-
-The JWT can be used to get a grant from the IdP, which will allow the system to. &lt;TODO: Define a grant&gt;
-
-Requirements 1, 2, 3 and 5 are all asking for credentials, so before Rufus answers any of them, here is the vocabulary. Three credentials, and only one of them opens a door. This is the standard we hold to, and you can lift this slide straight into your own platform docs.
-
-One: the session license. A signed JWT, issued when the traveler logs in, good for fifteen minutes. Two claims on it do the work. `sub` says who is here, and that is authentication. `group` says what they are cleared to run, and that is the input to authorization. Note what the license does not contain: permissions. Saving the future is premium only, and that rule lives in our code, not in the token. The token says where you belong; we decide what that buys.
-
-Two: the delegation grant. This is the one people expect to be dangerous, and it is the safest thing on the slide. It names who a service will be acting for later, and two claims make it inert: its audience is the token endpoint and nothing else, so the backend refuses it outright, and `may_act` names exactly one worker, so nobody else can redeem it. It authorizes nothing on its own. That is why we can let it live for eight hours and ride a workflow header across a wait on a human reviewer.
-
-Three: the access token. At the moment of the backend call, the grant plus the worker's own identity are exchanged, RFC 8693, for a short-lived token that names both parties: `sub` is the traveler, `act` is the worker. Two minutes, audience the backend. This is the only credential on this slide that opens a door, and it exists for about as long as the call it was minted for.
-
-So: a license says who you are and what group you are in, a grant says who a service may act for, and the exchanged token is the one that actually opens something. Hold on to those three and the rest of the talk, and all four demos, are just those words being enforced in places you did not have to write.</p></div><div class="bespoke-marp-note" data-index="5" tabindex="0"><p>5:30 - 
+Next, in our security, you can't just pass a JWT from the UI to the workflow to the backend system. This exposes the user's credential to a number of people and actors and we don't want that. So your client needs to request a delegation grant from the IdP. A delegation grant is a different token with fields to denote that, specifically, the worker is allowed to exchange the delegation grant for an access token to act on behalf of the traveler. The worker can then use the access token to access the Circuits of History systems, as the traveler.</p></div><div class="bespoke-marp-note" data-index="5" tabindex="0"><p>5:30 - 
 
 If you've seen the movies, you know a lot of what went wrong. For those who haven't, let's cover a couple of the problems that occurred.
 

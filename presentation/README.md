@@ -211,10 +211,22 @@ backend call.
 Requirement 4.
 
 1. Still Ted: book **Ace our history report**.
-2. Take the `correlation_id` from the worker log and show it on every line for that trip,
-   from the guardrail to the last activity. The id that crosses all three services is the
-   traveler's.
-3. Find the trip without knowing its ID, using the search attribute the startup
+2. Take the correlation id from the worker log and show it on **every line the worker
+   writes for that trip**: the guardrail, the workflow's own lines, each activity's own
+   lines, and even the SDK's HTTP lines. It is the third column of every line, and no
+   business code passes it anywhere. A `CorrelationLogFilter` reads it off a context
+   variable the startup interceptor set, so code that has never heard of the id still
+   logs under it.
+3. Where it stops is worth saying out loud: the id lives in the worker only. The backend
+   never receives it, and the identifier that crosses all three services is the
+   traveler's. A line logged with no trip in context shows `-`, which is how you can tell
+   the two apart on screen.
+
+   *Two kinds of line show `-` instead of an id: the query polls, and Rufus's signal.
+   Each arrives on its own task, in a fresh context, so nothing has set the id for it.
+   Honest gap, and a fair answer if someone spots it: `workflow_audit` could seed the
+   context in its signal and query hooks.*
+4. Find the trip without knowing its ID, using the search attribute the startup
    interceptor wrote:
 
 ```bash

@@ -259,7 +259,10 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
         # outbound hook.
         cpayload = (input.headers or {}).get(CORRELATION_HEADER_KEY)
         cid = workflow.payload_converter().from_payload(cpayload, str) if cpayload is not None else None
-        cid = cid or f"cot-{workflow.info().run_id[:8]}"
+        # The WHOLE run id, not a slice of it: run ids are UUIDv7, so `run_id[:8]` is a
+        # millisecond timestamp that only changes about every 65 seconds, which made
+        # every trip started in the same minute share one id.
+        cid = cid or f"cot-{workflow.info().run_id}"
         correlation_id.set(cid)
 
         # (2) Guardrail. Read the grant off the start header and hand it to an
@@ -287,9 +290,8 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
         # failure wrapping one. The message stays generic; `check.reason` is logged.
         if not check.valid:
             workflow.logger.warning(
-                "[interceptor:startup] rejected trip start: %s [correlation_id=%s]",
+                "[interceptor:startup] rejected trip start: %s",
                 check.reason,
-                cid,
             )
             raise ApplicationError(
                 "Bogus! This trip has no valid Circuits of History delegation grant on its header.",
@@ -308,11 +310,12 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
             ]
         )
 
+        # No correlation id in the message: `CorrelationLogFilter` puts it in the
+        # prefix of every line this process writes. See "One id on every line" below.
         workflow.logger.info(
-            "[interceptor:startup] trip start: traveler=%s mission=%s correlation_id=%s",
+            "[interceptor:startup] trip start: traveler=%s mission=%s",
             check.traveler_name,
             mission or "(none)",
-            cid,
         )
         return await super().execute_workflow(input)
 ```
@@ -379,13 +382,15 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
         # the run id (stable across replays). Propagated to activities below.
         cpayload = (input.headers or {}).get(CORRELATION_HEADER_KEY)
         cid = workflow.payload_converter().from_payload(cpayload, str) if cpayload is not None else None
-        cid = cid or f"cot-{workflow.info().run_id[:8]}"
+        # The WHOLE run id. Run ids are UUIDv7, so their leading hex digits are a
+        # millisecond timestamp: `run_id[:8]` only changes about every 65 seconds, which
+        # made every trip started in the same minute share one id.
+        cid = cid or f"cot-{workflow.info().run_id}"
         correlation_id.set(cid)
 
-        workflow.logger.info(
-            "[interceptor:startup] trip start: correlation_id=%s",
-            cid,
-        )
+        # Nothing formats the id into a message. A logging filter reads this context
+        # variable and puts it on every record instead.
+        workflow.logger.info("[interceptor:startup] trip start")
         return await super().execute_workflow(input)
 
 
@@ -514,7 +519,7 @@ This section introduces the interceptors that are built for this project, the re
 
 | Reason the interceptor exists | Class | Categories it occupies |
 | --- | --- | --- |
-| Authenticate the traveler, authorize the mission, and mint the delegation grant before a workflow is ever started | `JWTClientInterceptor` | Client outbound |
+| Authenticate the traveler, authorize the mission, and request the delegation grant before a workflow is ever started | `JWTClientInterceptor` | Client outbound |
 | Seed a correlation id, guard the workflow edge, and tag the run for search | `WorkflowStartupInterceptor` | Workflow inbound + outbound, Activity inbound |
 | Carry the delegation grant from the workflow down to each of its activities | `GrantPropagationInterceptor` | Workflow inbound + outbound, Activity inbound |
 | Redeem that grant for a short-lived credential, once per activity attempt | `TokenExchangeInterceptor` | Activity inbound |
@@ -540,8 +545,18 @@ Each overview also includes other use cases for the type of interceptor. This is
 
 - **Why a customer would care:** downstream systems sometimes need a verifiable credential to authorize an action and to record which user or service took it. A signed token is proof of identity those systems can validate themselves, whereas a name or id sitting in an ordinary business field is an unverified, mutable claim. If the user does not have proper permissions, rejecting the workflow here will prevent a number of billable actions from occurring and saves the customer money. More info can be found in [Insight 2](#insight-2-billable-actions-and-where-you-place-the-check) below.
 - **What fires it:** clicking "Fire up the booth" in the web client, which posts to `/api/book` and calls `start_workflow`.
-- **What it does:** In order, it performs 3 steps. First, it **authenticates** the token, including expiry, because out here a clock is legal. Second, it **authorizes** the request against business entitlements, since some missions are premium-only. Third, it **mints a delegation grant** and stamps that onto the Temporal header. A missing, forged, unrefreshable, or unentitled request is rejected before the workflow starts.
+- **What it does:** In order, it performs 3 steps. First, it **authenticates** the token, including expiry, because out here a clock is legal. Second, it **authorizes** the request against business entitlements, since some missions are premium-only. Third, it **requests a delegation grant** from the IdP (`POST /oauth2/grant`) and stamps what comes back onto the Temporal header. That request is a real HTTP round trip from inside an interceptor, which is legal here and would be a determinism bug in a workflow interceptor. A missing, forged, unrefreshable, or unentitled request is rejected before the workflow starts.
 - **What you will see when it runs:** valid and entitled requests proceed, and bad ones return a `BOGUS!` result immediately with no workflow started. This demo shares the specific fault as a way of showing the failure from the client interceptor ("that license is forged", "expired", "log in first") and is not a best practice to follow. Production systems should only state that the authentication/authorization has failed and not why.
+- **Exercising the grant endpoint it calls:** the third step is one HTTP call, so you can make it yourself:
+
+  ```bash
+  TOKEN=$(curl -s -X POST localhost:8000/api/login \
+    -H 'Content-Type: application/json' -d '{"identity":"bill"}' | jq -r .token)
+  curl -s -X POST localhost:9000/oauth2/grant -H "Authorization: Bearer $TOKEN" | jq
+  ```
+
+  A forged or expired license answers 401, and so does presenting a grant here instead of
+  a license: the endpoint requires `token_use: subject`.
 - **Code location:** [`workflows/interceptors/client_auth.py`](workflows/interceptors/client_auth.py).
 - **Triggering it outside the demo app:** `.venv/bin/python -m workflows.cli` runs the same client interceptor. It builds its Temporal client the same way. The Temporal CLI has no way to load your client interceptor directly.
 - **Other use cases:** per-tenant routing, context and correlation-id propagation, and request de-duplication. Anything that has to happen once per request, before the server is involved.
@@ -557,7 +572,7 @@ The error messsages in this demo tell the caller which check failed, including t
 - **Why a customer would care:** this is operational hygiene that belongs off to the side of business logic. A customer can get searchable executions, evaluate boundary preconditions, and generate correlated logs are applied to every workflow without a line of code for these itesm appearing in the workflow itself. It is also an inexpensive place for a customer to stop a workflow that should never have started.
 - **What fires it:** booking a trip from the web client starts `ChronoTripWorkflow`, and the interceptor runs at `execute_workflow` before any workflow code. Its outbound and activity wrapper fires as the workflow schedules each activity.
 - **What it does:** it seeds a **correlation id** from the header, or deterministically from the run id, then propagates it to activities so their log lines tie back to the trip. Next, it applies a **guardrail** via an activity, verifying the grant on the start header and failing fast with a non-retryable `InvalidDelegationGrant` error if it is missing, malformed, forged, or the wrong type. Finally, it **adds search attributes** for Traveler and Mission, making trips filterable in the UI and CLI without touching the workflow body.
-- **What you will see:** a `[interceptor:startup] trip start: traveler=... mission=... correlation_id=...` line at the start of each trip, the same `correlation_id` on the activity log lines, and `Traveler` and `Mission` visible on the workflow in the Temporal UI. A start with no grant, or with a forged one, fails immediately with `InvalidDelegationGrant`.
+- **What you will see:** a `[interceptor:startup] trip start: traveler=... mission=...` line at the start of each trip, the trip's correlation id in its own column on **every** line the worker writes for that trip, and `Traveler` and `Mission` visible on the workflow in the Temporal UI. A start with no grant, or with a forged one, fails immediately with `InvalidDelegationGrant`.
 - **Code location:** [`workflows/interceptors/workflow_startup.py`](workflows/interceptors/workflow_startup.py).
 - **Triggering it outside the demo app:** run `.venv/bin/python -m workflows.cli` to trigger the workflow. running `temporal workflow start...` skips the client interceptor entirely and grant data will be missing from the request. This will cause the guardrail check on the token to fail the run with `InvalidDelegationGrant` after this first interceptor and activity is run.
 - **Other use cases:** stamping memo or search attributes for ops dashboards, per-run feature-flag and config resolution, and one-time validation or setup at the start of every workflow. The outbound interceptor can also set priority and fairness on the activities and child workflows it schedules, which is a good fit for per-tenant or per-tier scheduling policy applied in one place. Note that the interceptor cannot change the running workflow's own priority, because that is fixed when the workflow starts.
@@ -637,42 +652,56 @@ Identity travels client to service to workflow to activity to backend, changing 
 
 Trimmed for reading: `(...)` replaces the context dictionary Temporal's workflow and
 activity loggers append to every line (`run_id`, `task_queue`, `workflow_id`, and the
-rest), the date prefix is dropped from the timestamp, and the repeated status polls are
-collapsed to a `...` marker. Everything else is a real capture — and the correlation id
-is left on every line it appears on, because following it down the page *is* the
-demonstration.
+rest), the date prefix is dropped from the timestamp, the repeated status polls are
+collapsed to a `...` marker, and the correlation id — the run id in full, so it is 40
+characters wide — is shortened to `cot-01a01b48…`. Everything else is a real capture from
+the kind deployment, and the id is left in place on every line, because following one
+column down the page *is* the demonstration.
+
+Note which lines carry it. `activities.py`, `auth_activities.py` and even the SDK's own
+`_client.py` know nothing about correlation, and their lines carry it anyway: a
+`CorrelationLogFilter` on the root handler reads the context variable the startup
+interceptor set, so the id costs no argument passing anywhere. The two lines showing `-`
+are honest: a signal and a query each arrive on their own task, in a fresh context, so
+nothing has set the id for them.
 ```text
 # worker terminal
 Worker starting on task queue 'interceptor-samples'...
-12:52:44 | INFO | activity_logging.py:38  | [interceptor:activity] started: verify_grant (workflow_id=chrono-trip-bill, attempt=1, correlation_id=cot-019fd722)
-12:52:44 | INFO | activities.py:159       | [activity:verify-grant] grant verified for bill (Bill S. Preston, Esq.) (...)
-12:52:44 | INFO | activity_logging.py:58  | [interceptor:activity] completed: verify_grant in 0.000s [correlation_id=cot-019fd722]
-12:52:44 | INFO | workflow_startup.py:171 | [interceptor:startup] trip start: traveler=Bill S. Preston, Esq. mission=Ace our history report correlation_id=cot-019fd722 (...)
-12:52:44 | INFO | activity_logging.py:38  | [interceptor:activity] started: paradox_scan (workflow_id=chrono-trip-bill, attempt=1, correlation_id=cot-019fd722)
-12:52:44 | INFO | _client.py:1740         | HTTP Request: POST http://localhost:9000/oauth2/token "HTTP/1.1 200 OK"
-12:52:44 | INFO | token_exchange.py:250   | [interceptor:exchange] worker-wyld-stallyns acting on behalf of bill (expires in 120s) (...)
-12:52:44 | INFO | activities.py:172       | [activity] calling paradox-scan backend for traveler bill -> Ancient Greece, 410 B.C. (...)
-12:52:47 | INFO | _client.py:1740         | HTTP Request: POST http://localhost:9000/paradox-scan "HTTP/1.1 200 OK"
-12:52:47 | INFO | activity_logging.py:58  | [interceptor:activity] completed: paradox_scan in 3.384s [correlation_id=cot-019fd722]
-12:52:52 | INFO | workflow.py:74          | [workflow] trip flagged for Rufus's review: Whoa — the Circuits of History detected a most bogus paradox risk! (...)
-12:52:54 | INFO | workflow_audit.py:42    | [interceptor:workflow] query received: get_state args=() (...)
+18:28:47 | INFO | cot-01a01b48… | activity_logging.py:39  | [interceptor:activity] started: verify_grant (workflow_id=chrono-trip-bill, attempt=1)
+18:28:47 | INFO | cot-01a01b48… | _client.py:1740         | HTTP Request: POST http://interceptors-backend:9000/oauth2/token "HTTP/1.1 200 OK"
+18:28:47 | INFO | cot-01a01b48… | token_exchange.py:250   | [interceptor:exchange] worker-wyld-stallyns acting on behalf of bill (expires in 120s) (...)
+18:28:47 | INFO | cot-01a01b48… | auth_activities.py:109  | [activity:verify-grant] grant verified for bill (Bill S. Preston, Esq.) (...)
+18:28:47 | INFO | cot-01a01b48… | activity_logging.py:57  | [interceptor:activity] completed: verify_grant in 0.006s
+18:28:47 | INFO | cot-01a01b48… | workflow_startup.py:218 | [interceptor:startup] trip start: traveler=Bill S. Preston, Esq. mission=Ace our history report (...)
+18:28:47 | INFO | cot-01a01b48… | activity_logging.py:39  | [interceptor:activity] started: paradox_scan (workflow_id=chrono-trip-bill, attempt=1)
+18:28:47 | INFO | cot-01a01b48… | activities.py:75        | [activity] calling paradox-scan backend for traveler bill -> Ancient Greece, 410 B.C. (...)
+18:28:51 | INFO | cot-01a01b48… | _client.py:1740         | HTTP Request: POST http://interceptors-backend:9000/paradox-scan "HTTP/1.1 200 OK"
+18:28:51 | INFO | cot-01a01b48… | activity_logging.py:57  | [interceptor:activity] completed: paradox_scan in 4.066s
+18:28:56 | INFO | cot-01a01b48… | workflow.py:74          | [workflow] trip flagged for Rufus's review: Bogus timeline! This journey could change history — Rufus must sign off. (...)
+18:28:57 | INFO | -             | workflow_audit.py:42    | [interceptor:workflow] query received: get_state args=() (...)
    ...  the traveler's browser polls get_state every ~2s while the trip waits for Rufus  ...
-12:52:59 | INFO | workflow_audit.py:34    | [interceptor:workflow] signal received: submit_review args=(str, str) (...)
-12:52:59 | INFO | workflow.py:84          | [workflow] journey approved by Rufus (...)
+18:29:09 | INFO | -             | workflow_audit.py:34    | [interceptor:workflow] signal received: submit_review args=(str, str) (...)
+18:29:09 | INFO | cot-01a01b48… | workflow.py:84          | [workflow] journey approved by Rufus (...)
    ...  polling continues until the trip closes  ...
-12:53:04 | INFO | activity_logging.py:38  | [interceptor:activity] started: execute_jump (workflow_id=chrono-trip-bill, attempt=1, correlation_id=cot-019fd722)
-12:53:04 | INFO | activities.py:191       | [activity] calling engage-booth backend for traveler bill -> Ancient Greece, 410 B.C. (...)
-12:53:10 | INFO | _client.py:1740         | HTTP Request: POST http://localhost:9000/engage-booth "HTTP/1.1 200 OK"
-12:53:10 | INFO | activity_logging.py:58  | [interceptor:activity] completed: execute_jump in 5.908s [correlation_id=cot-019fd722]
+18:29:14 | INFO | cot-01a01b48… | activity_logging.py:39  | [interceptor:activity] started: execute_jump (workflow_id=chrono-trip-bill, attempt=1)
+18:29:14 | INFO | cot-01a01b48… | activities.py:94        | [activity] calling engage-booth backend for traveler bill -> Ancient Greece, 410 B.C. (...)
+18:29:18 | INFO | cot-01a01b48… | _client.py:1740         | HTTP Request: POST http://interceptors-backend:9000/engage-booth "HTTP/1.1 200 OK"
+18:29:18 | INFO | cot-01a01b48… | activity_logging.py:57  | [interceptor:activity] completed: execute_jump in 4.173s
 
 # backend terminal
-12:52:44 | INFO | [backend] issued delegated token — worker=worker-wyld-stallyns on behalf of traveler=bill
-INFO:     10.244.1.4:37598 - "POST /oauth2/token HTTP/1.1" 200 OK
-12:52:44 | INFO | [backend] authorized paradox-scan — worker=worker-wyld-stallyns acting on behalf of traveler=bill (Bill S. Preston, Esq.)
-INFO:     10.244.1.4:37604 - "POST /paradox-scan HTTP/1.1" 200 OK
-12:53:04 | INFO | [backend] authorized engage-booth — worker=worker-wyld-stallyns acting on behalf of traveler=bill (Bill S. Preston, Esq.)
-INFO:     10.244.1.4:32958 - "POST /engage-booth HTTP/1.1" 200 OK
+18:28:47 | INFO | [backend] issued delegation grant — traveler=bill may_act=worker-wyld-stallyns ttl=28800s
+INFO:     10.244.1.12:57976 - "POST /oauth2/grant HTTP/1.1" 200 OK
+18:28:47 | INFO | [backend] issued delegated token — worker=worker-wyld-stallyns on behalf of traveler=bill
+INFO:     10.244.1.11:47084 - "POST /oauth2/token HTTP/1.1" 200 OK
+18:28:47 | INFO | [backend] authorized paradox-scan — worker=worker-wyld-stallyns acting on behalf of traveler=bill (Bill S. Preston, Esq.)
+INFO:     10.244.1.11:47098 - "POST /paradox-scan HTTP/1.1" 200 OK
+18:29:14 | INFO | [backend] authorized engage-booth — worker=worker-wyld-stallyns acting on behalf of traveler=bill (Bill S. Preston, Esq.)
+INFO:     10.244.1.11:53652 - "POST /engage-booth HTTP/1.1" 200 OK
 ```
+
+Two IP addresses in the backend column, and they matter: `10.244.1.12` is the **web pod**
+asking for the grant, `10.244.1.11` is the **worker** exchanging it and then spending the
+result. The client requests, the worker redeems, the backend only ever verifies.
 
 Two things in there are easy to miss. **`verify_grant` runs first** - before the startup interceptor's own log line, because that interceptor schedules the check and waits for the recorded result before doing anything else. You'll also see that `execute_jump` doesn't have a `[interceptor:exchange]` log entry. The activity-inbound token-exchange interceptor caches the access token minted for previous activities and reuse it if it is still valid, within 90 seconds, when the jump ran 20 seconds later, so the token-exchange interceptor served it from its per-grant cache instead of minting a second one. If Rufus didn't approve a trip in a timely fashion, you would see a second call in the logs for `[interceptor:exchange]`.
 

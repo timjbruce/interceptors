@@ -130,7 +130,7 @@ Some journeys will be flagged for review by Rufus. This is done by the backend s
 
 ### How the worker acts on your behalf
 
-The token you see in the web UI never leaves the client tier. When you book a trip, the client interceptor verifies your session license and then mints a separate **delegation grant**, which is what travels to the workflow. The token exchange interceptor, attached to each activity, trades that grant, plus the worker's own identity, for a short-lived access token whose subject is you and whose actor is the worker — so the backend logs read `worker=worker-wyld-stallyns acting on behalf of traveler=bill`.
+The token you see in the web UI never leaves the client tier. When you book a trip, the client interceptor verifies your session license and then requests a separate **delegation grant** from the IdP (`POST /oauth2/grant`), and that is what travels to the workflow. The token exchange interceptor, attached to each activity, trades that grant, plus the worker's own identity, for a short-lived access token whose subject is you and whose actor is the worker — so the backend logs read `worker=worker-wyld-stallyns acting on behalf of traveler=bill`.
 
 Two reasons it works this way, both worth knowing:
 
@@ -159,7 +159,7 @@ Steps to confirm each part is real:
    - Book a valid journey with either Bill or Ted.
    - Find the workflow in the Temporal UI and click on it for details.
    - Click on the Event `Workflow Execution Started` and review the `Header` field.
-   - You will see a `delegation-grant` value. It deliberately does *not* match the JWT shown in the web UI. The browser holds a short-lived session license; the client interceptor mints a separate grant for the workflow. Decode the grant (paste it into <https://jwt.io>) and note `token_use: grant`, an `aud` of `circuits-of-time-token-endpoint`, and `may_act` naming the worker.
+   - You will see a `delegation-grant` value. It deliberately does *not* match the JWT shown in the web UI. The browser holds a short-lived session license; the client interceptor requests a separate grant from the IdP for the workflow. Decode the grant (paste it into <https://jwt.io>) and note `token_use: grant`, an `aud` of `circuits-of-time-token-endpoint`, and `may_act` naming the worker.
    - That is the security property: this value cannot call the backend and cannot be used to request a trip via the web application. Only the named worker, the Temporal worker, can redeem it.
    - Restart the app using the [Encrypting Payloads](#encrypting-payloads) instructions and watch the header in the Temporal UI become ciphertext.
 3. **The worker acted on the user's behalf.**
@@ -188,7 +188,13 @@ Steps to confirm each part is real:
    # application/x-www-form-urlencoded, and each token must be accompanied by its
    # *_token_type. Drop subject_token_type and the endpoint answers
    # 400 invalid_request.
-   GRANT=$(.venv/bin/python -c "from workflows.auth import *; print(mint_delegation_grant(verify_token('$TOKEN')))")
+   # Step one is a real endpoint now: ask the IdP for a grant, exactly as the client
+   # interceptor does. The license is presented, not posted, and the response carries
+   # no `token_type` because a grant is not spent by being presented.
+   GRANT=$(curl -s -X POST localhost:9000/oauth2/grant \
+     -H "Authorization: Bearer $TOKEN" | jq -r .delegation_grant)
+   # The worker's own workload identity stays self-minted in the demo; in production the
+   # platform issues it (SPIFFE, a k8s service account token, cloud IAM).
    ACTOR=$(.venv/bin/python -c "from workflows.auth import mint_actor_token; print(mint_actor_token())")
    JWT=urn:ietf:params:oauth:token-type:jwt
    ACCESS=$(curl -s -X POST localhost:9000/oauth2/token \
@@ -227,22 +233,24 @@ Steps to confirm each part is real:
 7. **See the interceptors firing (logs).** The worker-side interceptors log as they run. Watch the **worker terminal** (terminal 3); the backend's auth line
    is in the **backend terminal** (terminal 2). One booking produces lines like:
 
-Abridged: the real lines carry a full date and an `INFO` column.
+Abridged: the real lines carry a full date and an `INFO` column, and the correlation id
+   is the run id in full, shortened to `cot-01a01b48…` here.
    ```text
-   12:52:44 | activity_logging.py:38   | [interceptor:activity] started: verify_grant (workflow_id=chrono-trip-bill, attempt=1, correlation_id=cot-019fd722)
-   12:52:44 | activities.py:159        | [activity:verify-grant] grant verified for bill (Bill S. Preston, Esq.) (...)
-   12:52:44 | activity_logging.py:58   | [interceptor:activity] completed: verify_grant in 0.000s [correlation_id=cot-019fd722]
-   12:52:44 | workflow_startup.py:171  | [interceptor:startup] trip start: traveler=Bill S. Preston, Esq. mission=Ace our history report correlation_id=cot-019fd722 (...)
-   12:52:44 | activity_logging.py:38   | [interceptor:activity] started: paradox_scan (workflow_id=chrono-trip-bill, attempt=1, correlation_id=cot-019fd722)
-   12:52:44 | token_exchange.py:250    | [interceptor:exchange] worker-wyld-stallyns acting on behalf of bill (expires in 120s) (...)
-   12:52:44 | activities.py:172        | [activity] calling paradox-scan backend for traveler bill -> Ancient Greece, 410 B.C. (...)
-   12:52:47 | activity_logging.py:58   | [interceptor:activity] completed: paradox_scan in 3.384s [correlation_id=cot-019fd722]
+   18:28:47 | cot-01a01b48… | activity_logging.py:39  | [interceptor:activity] started: verify_grant (workflow_id=chrono-trip-bill, attempt=1)
+   18:28:47 | cot-01a01b48… | token_exchange.py:250   | [interceptor:exchange] worker-wyld-stallyns acting on behalf of bill (expires in 120s) (...)
+   18:28:47 | cot-01a01b48… | auth_activities.py:109  | [activity:verify-grant] grant verified for bill (Bill S. Preston, Esq.) (...)
+   18:28:47 | cot-01a01b48… | activity_logging.py:57  | [interceptor:activity] completed: verify_grant in 0.006s
+   18:28:47 | cot-01a01b48… | workflow_startup.py:218 | [interceptor:startup] trip start: traveler=Bill S. Preston, Esq. mission=Ace our history report (...)
+   18:28:47 | cot-01a01b48… | activity_logging.py:39  | [interceptor:activity] started: paradox_scan (workflow_id=chrono-trip-bill, attempt=1)
+   18:28:47 | cot-01a01b48… | activities.py:75        | [activity] calling paradox-scan backend for traveler bill -> Ancient Greece, 410 B.C. (...)
+   18:28:51 | cot-01a01b48… | activity_logging.py:57  | [interceptor:activity] completed: paradox_scan in 4.066s
+   18:28:57 | -             | workflow_audit.py:42    | [interceptor:workflow] query received: get_state args=() (...)
    ...
-   12:53:04 | activity_logging.py:38   | [interceptor:activity] started: execute_jump (workflow_id=chrono-trip-bill, attempt=1, correlation_id=cot-019fd722)
-   12:53:10 | activity_logging.py:58   | [interceptor:activity] completed: execute_jump in 5.908s [correlation_id=cot-019fd722]
+   18:29:14 | cot-01a01b48… | activity_logging.py:39  | [interceptor:activity] started: execute_jump (workflow_id=chrono-trip-bill, attempt=1)
+   18:29:18 | cot-01a01b48… | activity_logging.py:57  | [interceptor:activity] completed: execute_jump in 4.173s
    ```
 
-This shows the interceptors handing off to each other. `verify_grant` runs **first**, as it is the credential check the startup interceptor schedules, before any business activity. Then the startup interceptor tags the run, then the exchange interceptor mints a delegated token, or reuses a cached one that is still valid, for each activity attempt. The interceptor log lines all carry the same `correlation_id`, seeded by the startup interceptor. The full sequence, including the review pause, is annotated in [interceptors.md](interceptors.md#watching-it-happen).
+This shows the interceptors handing off to each other. `verify_grant` runs **first**, as it is the credential check the startup interceptor schedules, before any business activity. Then the startup interceptor tags the run, then the exchange interceptor obtains a delegated token from the token endpoint, or reuses a cached one that is still valid, for each activity attempt. Every line carries the trip's correlation id in its own column — including `activities.py` and `auth_activities.py` lines, which never mention it: a `CorrelationLogFilter` reads the context variable the startup interceptor set, so no code has to pass the id anywhere. Lines logged with no trip in context show `-`, which is what the query line above is: a query arrives on its own task, in a fresh context. The full sequence, including the review pause, is annotated in [interceptors.md](interceptors.md#watching-it-happen).
 
    - Grant propagation has log lines of its own, so you see its effect in logs and with the backend accepting the call (`[backend] authorized paradox-scan — worker=worker-wyld-stallyns acting on behalf of traveler=bill (Bill S. Preston, Esq.)` in terminal 2) instead of a 401. Additionally, the client interceptor logs rejections in the **web** terminal.
    - In the container / kind deployment, the same lines are in the pod logs: `kubectl --context kind-temporal -n interceptors logs -l app.kubernetes.io/component=worker` (use `component=backend` for the backend line).
@@ -263,7 +271,7 @@ workflows/                     all the Temporal code
 ├── worker.py                  registers workflow, activities, worker-side interceptors
 ├── cli.py                     CLI demo (auth + entitlement scenarios)
 └── interceptors/
-    ├── client_auth.py         Client: validate (+expiry) + entitlement + mint the delegation grant
+    ├── client_auth.py         Client: validate (+expiry) + entitlement + request the delegation grant
     ├── workflow_startup.py    Workflow start: correlation id + guardrail + search-attr tagging
     ├── grant_propagation.py   Workflow + activity: carry the grant to the activities
     ├── token_exchange.py      Activity: redeem the grant for a delegated access token (on-behalf-of)

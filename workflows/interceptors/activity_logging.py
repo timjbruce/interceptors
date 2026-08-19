@@ -16,7 +16,6 @@ from typing import Any
 from temporalio import activity
 from temporalio.worker import ActivityInboundInterceptor, ExecuteActivityInput, Interceptor
 
-from workflows.interceptors.workflow_startup import correlation_id
 
 logger = logging.getLogger("temporal.activity")
 
@@ -32,33 +31,32 @@ class _LoggingActivityInboundInterceptor(ActivityInboundInterceptor):
     async def execute_activity(self, input: ExecuteActivityInput) -> Any:
         info = activity.info()
         started = time.monotonic()
-        # correlation id is seeded by the startup interceptor and propagated onto
-        # the activity header, so every activity log line ties back to its trip.
-        cid = correlation_id.get()
+        # No correlation id in these messages. The startup interceptor seeds it, the
+        # header carries it here, and `CorrelationLogFilter` puts it in the prefix of
+        # every line this process writes — including lines from activities and SDK code
+        # that have never heard of it. Formatting it again here would only print it
+        # twice, and would suggest a call site has to know about it.
         logger.info(
-            "[interceptor:activity] started: %s (workflow_id=%s, attempt=%d, correlation_id=%s)",
+            "[interceptor:activity] started: %s (workflow_id=%s, attempt=%d)",
             info.activity_type,
             info.workflow_id,
             info.attempt,
-            cid,
         )
         try:
             result = await super().execute_activity(input)
         except BaseException as exc:
             logger.warning(
-                "[interceptor:activity] failed: %s after %.3fs (%s: %s) [correlation_id=%s]",
+                "[interceptor:activity] failed: %s after %.3fs (%s: %s)",
                 info.activity_type,
                 time.monotonic() - started,
                 type(exc).__name__,
                 exc,
-                cid,
             )
             raise
         else:
             logger.info(
-                "[interceptor:activity] completed: %s in %.3fs [correlation_id=%s]",
+                "[interceptor:activity] completed: %s in %.3fs",
                 info.activity_type,
                 time.monotonic() - started,
-                cid,
             )
             return result

@@ -48,6 +48,7 @@ the search attributes below never depend on decoding the grant in the sandbox.
 """
 
 import contextvars
+import logging
 from datetime import timedelta
 from typing import Any, Optional, Type
 
@@ -91,6 +92,41 @@ MISSION_SA = SearchAttributeKey.for_keyword("Mission")
 correlation_id: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar(
     "correlation_id", default=None
 )
+
+# What a log line shows when there is no trip in context: worker startup, poller
+# chatter, the SDK's own messages. Without a default the format string raises on every
+# one of them.
+NO_CORRELATION = "-"
+
+
+class CorrelationLogFilter(logging.Filter):
+    """Put the current trip's correlation id on every log record in the process.
+
+    The point of this over each call site formatting its own id: no business code, and
+    no activity, has to know the id exists. Set it once on the way in, add one field to
+    the log format, and every line written while a trip is in context carries it -
+    including lines from code that has never heard of this interceptor.
+
+    A `Filter` on a *handler* rather than a logger, because handler filters see records
+    that propagated up from every logger in the process; a logger filter would only see
+    records logged directly to that logger.
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if not hasattr(record, "correlation_id"):
+            record.correlation_id = correlation_id.get() or NO_CORRELATION
+        return True
+
+
+def install_correlation_logging() -> None:
+    """Attach `CorrelationLogFilter` to every root handler. Call after `basicConfig`.
+
+    Idempotent: calling it twice does not double-filter, so it is safe from a module
+    that may be imported more than once.
+    """
+    for handler in logging.getLogger().handlers:
+        if not any(isinstance(f, CorrelationLogFilter) for f in handler.filters):
+            handler.addFilter(CorrelationLogFilter())
 
 
 class WorkflowStartupInterceptor(Interceptor):
@@ -159,9 +195,8 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
         # failure wrapping one. The message stays generic; `check.reason` is logged.
         if not check.valid:
             workflow.logger.warning(
-                "[interceptor:startup] rejected trip start: %s [correlation_id=%s]",
+                "[interceptor:startup] rejected trip start: %s",
                 check.reason,
-                cid,
             )
             raise ApplicationError(
                 "Bogus! This trip has no valid Circuits of History delegation grant on its header.",
@@ -181,10 +216,11 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
         )
 
         workflow.logger.info(
-            "[interceptor:startup] trip start: traveler=%s mission=%s correlation_id=%s",
+            # The id is not in this message: `CorrelationLogFilter` already puts it in
+            # the prefix of every line, this one included.
+            "[interceptor:startup] trip start: traveler=%s mission=%s",
             check.traveler_name,
             mission or "(none)",
-            cid,
         )
         return await super().execute_workflow(input)
 
