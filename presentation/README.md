@@ -4,8 +4,8 @@ A 45-minute, story-first talk built on this repo's demo. Rufus is sent to save t
 universe, the business hands him six requirements, and interceptors are how he meets all
 six without touching business logic.
 
-**20 slides.** Thirteen for the story, four for the demo, three to close. Technical depth
-lives in the speaker notes and in the repo, deliberately not on the slides.
+**18 slides.** Twelve for the story and the teaching, four for the demo, two to close.
+Technical depth lives in the speaker notes and in the repo, deliberately not on the slides.
 
 - [`interceptors-story.md`](interceptors-story.md) is the deck (Marp markdown, 16:9).
   Speaker notes are HTML comments with timing cues.
@@ -50,17 +50,18 @@ The generator deletes any SVG it no longer produces, so stale files cannot linge
 | 4 | The next universe | **the six business requirements**, the spine of the talk |
 | 5 | The standard for authentication and authorization | **the three credentials**, and the only one that opens a door |
 | 6 | Why the requirements exist | the robot doubles, and Napoleon at the water park |
-| 7 | Requirement 6: every system | every workflow and every activity inside it, and an open question |
-| 8 | Rufus already knew the answer | an interceptor is middleware: A, B, the real work, B, A |
-| 9 | Five places to hook in | the same four questions asked at each one |
+| 7 | Requirement 6: every system, not just the booth | every workflow and every activity inside it, and an open question |
+| 8 | Interceptors Overview | one interceptor: your call goes in, the real work happens inside, it gets the call again on the way out |
+| 9 | Five places to hook in | the same four questions asked at each one, **and the colour legend for the whole deck** |
 | 10 | How to build one | the three moves, on real code from the repo |
-| 11 | When to reach for one | five signals, and three things that are somebody else's job |
+| 11 | Passing values to activities without changing signatures | the header-and-context pattern, generic, no repo detail |
 | 12 | Six business requirements, six interceptors | the mapping, **and the answer to slide 7** |
-| 13 | One booking, all six | firing order, and zero lines in `workflow.py` |
-| 14-17 | Demo 1 to 4 | one business requirement per run, drawn on the workflow |
-| 18 | Then Rufus told the rest of IT | six more uses for the same five places |
-| 19 | What Rufus shipped | four numbers and the question to take home |
-| 20 | Questions | the repo link and where to read next |
+| 13 | Demo 1: at the client | the two refusals, and where demo 2 begins |
+| 14 | Demo 2: the workflow opens | workflow inbound, then both chains around the first activity |
+| 15 | Demo 2: the decision and the jump | the audit hook, then the same two chains again |
+| 16 | Additional demos | every hook on one board, for questions and spare time |
+| 17 | Then Rufus told the rest of IT | six more uses for the same five places |
+| 18 | Questions | the repo link and where to read next |
 
 Slide 5 is the vocabulary the rest of the deck spends: license, grant, access token, and
 the claims that decide something on each. It sits with the business requirements, not with
@@ -73,32 +74,48 @@ its own, and the slide draws it that way on purpose.
 Slide 7 deliberately does not answer its own question. Interceptors are not defined
 until slide 8, and "wired in once" arrives on slide 10.
 
-Slides 8 to 11 run what, where, how, when: what an interceptor is, where you can use
-one, how you build them, then whether you should.
+Slides 8 to 11 run what, where, how, and what it buys you: what an interceptor is, where
+you can use one, how you build them, then the one pattern the demo leans on hardest.
+
+Slide 8 is deliberately one box labelled "Interceptor", with the real work drawn INSIDE
+it. The chain, the ordering and delegate-or-short-circuit arrive on slides 9 and 10; this
+slide only has to land the wrapping shape.
+
+Slide 11 names no interceptor and no file from this repo on purpose. It is the reusable
+pattern; slide 12 is where it stops being abstract.
 
 ## Timing
 
-| Block | Slides | Minutes |
-|---|---|---|
-| Title and frame | 1 | 1 |
-| The world, the requirements, the risk | 2-4, 6-7 | 9 |
-| The credentials standard | 5 | 1.5 |
-| What interceptors are, where they go, whether to use one | 8-11 | 6 |
-| One booking, all six | 13 | 2 |
-| Demo | 14-17 | 10 |
-| Close | 18-19 | 3 |
-| Questions | 20 | ~13 |
+Cues live in the speaker notes as ranges. What the deck currently asks for:
 
-The 6 minutes on the interceptors block now covers **four** slides rather than three:
-slide 10 (how to build one) and slide 11 (when to reach for one) were both added after this
-budget was set, and slide 5 (the credentials standard) added a fourth story slide on top.
-The row above gives slide 5 its own 1.5 minutes, which the table did not have to spare, so
-the total is over and the minutes have to come from somewhere. Re-time it or cut, but do it
-before delivery rather than in the room.
+| Block | Slides | Cue | Minutes |
+|---|---|---|---|
+| Title and frame | 1 | 0:00 | 1 |
+| The world, the requirements, the risk | 2-4, 6-7 | 1:00 - 8:30 | 7.5 |
+| The credentials standard | 5 | 4:00 - 6:30 | (inside the block above) |
+| What an interceptor is, and where | 8-9 | 8:30 - 11:30 | 3 |
+| How to build one | 10 | 11:30 - 14:30 | 3 |
+| Values without signature changes | 11 | 14:30 - 17:30 | 3 |
+| The mapping | 12 | 17:30 - 19:00 | 1.5 |
+| Demo | 13-16 | 19:00 - 34:00 | 15 |
+| Close | 17 | 34:00 - 35:00 | 1 |
+| Questions | 18 | 35:00 | ~10 |
 
-Running long? Cut **demo 3** (see what happened) first, then slide 18. Never cut slide 4
-(the six requirements), slide 5 (the credentials standard), slide 12 (the mapping) or
-slide 13. They are the spine.
+That totals about 35 minutes of material in a 45-minute slot, leaving roughly 10 for
+questions. The demo is the single largest block and the only one that can move much: it
+is four boards but only **two** runs, and the second run spans three of them.
+
+**Running long, in the order to cut:**
+
+1. **Slide 16, Additional demos.** It is a parking board for questions and spare time.
+   Nothing later depends on it.
+2. **The second half of demo 2** (slide 15, the approval and the jump). Say what would
+   have happened; the chains on that board are identical to slide 14's.
+3. **Slide 17.** The "every other system" close is a nice-to-have.
+
+Never cut slide 4 (the six requirements), slide 5 (the credentials standard), slide 11
+(the header pattern) or slide 12 (the mapping). They are the spine, and the demo assumes
+all four.
 
 The demo slides carry no expected output. The terminals are on screen anyway, so the
 "point at this line" detail lives in the runbook below.
@@ -117,7 +134,7 @@ The demo slides carry no expected output. The terminals are on screen anyway, so
 Characters are caricatures recognized by props, not likeness: Bill's curly blond mop and
 the horse head on his vest, Ted's long dark hair and vest, Rufus's long coat, beard and
 guitar, the doubles' plated faces and red eyes, Napoleon's bicorne. The Temporal mark on
-slides 1, 2 and 20 is the one from `web/static/temporal.svg`.
+slides 1, 2 and 18 is the one from `web/static/temporal.svg`.
 
 Bill's horse head is the chess-knight glyph `&#9816;` (U+2658) set as text, not a drawn
 path: a hand-drawn horse at that size reads as a cat. It therefore depends on a system
@@ -137,14 +154,14 @@ Four terminals plus a browser. From the repo root:
 temporal server start-dev     # 1
 ./addsearchattributes.sh      # once, in terminal 2, before the backend
 ./runbackend.sh               # 2, the delegation lines appear here
-./runworkflow.sh              # 3, five of the six run here, four of them log
+./runworkflow.sh              # 3, five of the six run here; client_auth is in terminal 4
 ./runweb.sh                   # 4, http://localhost:8000
 ```
 
 Leave `ENCRYPT_PAYLOADS` unset. It defaults to false, so the quickstart above already runs
 in plaintext, but if you have been experimenting with the README's Encrypting Payloads
-section, turn it off again: with it on, the codec encrypts headers too and demo 1's header
-inspection shows ciphertext instead of the delegation grant.
+section, turn it off again: with it on, the codec encrypts headers too and the header
+inspection in run 2 shows ciphertext instead of the delegation grant.
 
 Then:
 
@@ -153,46 +170,33 @@ Then:
 - Optional: the Temporal UI at <http://localhost:8233>.
 - One in-flight trip per traveler (workflow ID `chrono-trip-<traveler>`), so let a trip
   finish before rebooking as the same dude.
-- The paradox scan flags about half of all trips at random. Runs 1 and 3 assume an
-  unflagged trip. If run 1 flags, approve it as Rufus, say in one sentence that this is
-  demo 4 arriving early, and still run demo 4 with the checkbox to show the deterministic
-  path. Note that it consumes `chrono-trip-bill`, so let it finish before rebooking as
-  Bill.
+- The paradox scan flags about half of all trips at random, which no longer matters:
+  run 2 ticks **Force a bogus timeline** on purpose, so the approval step is deterministic
+  rather than a coin toss. If you drive an unscripted trip off slide 16 and it flags
+  unexpectedly, just approve it as Rufus.
 
-### Run 1: run a cleared mission, and act for the traveler *(slide 14, ~2.5 min)*
+### Run 1: the two refusals *(slide 13, ~4 min)*
 
-Requirements 2 and 5.
+Requirements 1 and 2. Everything here happens in our own process, which is why slide 13 is
+the only board this run needs.
 
-1. Tab A: log in as **Bill S. Preston, Esq.** (premium group).
-2. Book **Save the future**, leaving **Force a bogus timeline** unticked.
-3. The trip runs straight through.
+Have open before you start: both browser tabs, the worker log, the backend log, the
+Temporal UI, and a JWT decoder if you want to show claims.
 
-Worker log: `verify_grant` runs **first** (the guardrail's activity), then one exchange
-line for it, then the startup line with traveler, mission and `correlation_id`. The
-exchange is cached for the rest of the trip, so there is no second line.
+1. Tab A: log in as **Ted "Theodore" Logan** (standard group). Book **Save the future**.
+   Refused in the browser: his licence is perfectly valid, but the mission is premium-only
+   and he is not in the group.
+2. Switch to the Temporal UI: **there is nothing there.** No workflow, no history, no
+   billed Action. One rejection line in the web terminal.
+3. Tab A: log in as **Evil Bill** (forged licence). Book anything. Refused by the same
+   hook for a different reason: the token does not validate at all.
 
-Backend log:
+The commercial point is worth saying out loud. Ted is not an attacker, he is a normal
+user asking for something he is not entitled to, and that is the common case. Without a
+check at the client a customer pays to start the workflow and probably pays again for an
+activity to check the token.
 
-```text
-[backend] authorized engage-booth — worker=worker-wyld-stallyns acting on behalf of traveler=bill (Bill S. Preston, Esq.)
-```
-
-*Optional:* Temporal UI, the run, `WorkflowExecutionStarted`, `Header`. The
-`delegation-grant` value deliberately does not match the browser's token.
-
-### Run 2: refuse a mission the traveler is not cleared for *(slide 15, ~1.5 min)*
-
-Requirement 2.
-
-1. Tab A: log in as **Ted "Theodore" Logan** (standard group).
-2. Book **Save the future**. Refused immediately in the browser.
-3. Switch to the Temporal UI: **there is nothing there.**
-
-No workflow, no history, no billed Action. One rejection line in the web terminal.
-
-*Optional 20 seconds, same interceptor, requirement 1:* log in as **Evil Bill** (forged
-license) and book anything. Refused by the same gate for a different reason. To show the
-bypass as well:
+*Optional, to show the bypass:*
 
 ```bash
 temporal workflow execute \
@@ -206,49 +210,76 @@ No client interceptor means no grant on the header, so the workflow-edge guardra
 the run with a non-retryable `InvalidDelegationGrant`, before any business activity or
 backend call.
 
-### Run 3: see what happened on a trip *(slide 16, ~2 min, cut this one first)*
+### Run 2: one cleared trip, end to end *(slides 13 to 15, ~9 min)*
 
-Requirement 4.
+Requirements 1, 3, 4 and 5. One booking, driven across three boards. Advance the slide as
+the run moves; the boards are the map, not separate demos.
 
-1. Still Ted: book **Ace our history report**.
-2. Take the correlation id from the worker log and show it on **every line the worker
-   writes for that trip**: the guardrail, the workflow's own lines, each activity's own
-   lines, and even the SDK's HTTP lines. It is the third column of every line, and no
-   business code passes it anywhere. A `CorrelationLogFilter` reads it off a context
-   variable the startup interceptor set, so code that has never heard of the id still
-   logs under it.
-3. Where it stops is worth saying out loud: the id lives in the worker only. The backend
-   never receives it, and the identifier that crosses all three services is the
-   traveler's. A line logged with no trip in context shows `-`, which is how you can tell
-   the two apart on screen.
+**On slide 13, the client.** Log in as **Bill S. Preston, Esq.** (premium) and book
+**Save the future** with **Force a bogus timeline** ticked. Ticking it is deliberate: it
+is the only way you reach the audit hook later in the same run.
 
-   *Two kinds of line show `-` instead of an id: the query polls, and Rufus's signal.
-   Each arrives on its own task, in a fresh context, so nothing has set the id for it.
-   Honest gap, and a fair answer if someone spots it: `workflow_audit` could seed the
-   context in its signal and query hooks.*
-4. Find the trip without knowing its ID, using the search attribute the startup
-   interceptor wrote:
+`client_auth` verifies the licence, checks the group, asks the IdP for a delegation grant,
+stamps it on the start header, and delegates. Note what did **not** go on that header:
+Bill's own session token. Backend log:
 
-```bash
-temporal workflow list --query "Traveler = 'Ted \"Theodore\" Logan'"
+```text
+[backend] issued delegation grant — traveler=bill may_act=worker-wyld-stallyns ttl=28800s
 ```
 
-### Run 4: prove who approved a questionable trip *(slide 17, ~3 min)*
+**Advance to slide 14, the workflow opens.** `workflow_startup` creates the correlation id
+and upserts the search attributes, then schedules `verify_grant` — an activity, because
+testing expiry means reading a clock and workflow code cannot. That activity is
+deliberately not drawn on the board; mention it and move on. `grant_propagation` puts the
+grant into context.
 
-Requirement 3, and the best story of the four.
+Then the two chains around `paradox scan`: two hooks stamp the header on the way out, four
+read it back on the way in. Backend log for the exchange and the call:
 
-1. Tab A: log in as **Bill**. Book **Save the future** with **Force a bogus timeline**
-   ticked.
-2. The trip parks at `awaiting_review`.
-3. Tab B (Rufus): **approve** it. The jump runs and the trip completes.
+```text
+[backend] issued delegated token — worker=worker-wyld-stallyns on behalf of traveler=bill
+[backend] authorized paradox-scan — worker=worker-wyld-stallyns acting on behalf of traveler=bill (Bill S. Preston, Esq.)
+```
 
-Two things to point at:
+Two things to point at in the worker terminal:
 
-- the audit line for the signal. It proves a decision arrived, when it arrived, and that
-  no handler could skip the record. It logs argument types, never their values.
-- where the approver's name lives: the signal's own argument in Event History, taken from
-  an authenticated admin check (`web/app.py:161`), not a self-reported string. Open
-  `WorkflowExecutionSignaled` in the Temporal UI if the room is compliance-minded.
+- **the correlation id on every line for this trip**, including lines from code that has
+  never heard of it. `CorrelationLogFilter` reads it off a context variable the startup
+  interceptor set. A line logged with no trip in context shows `-`, which is how you tell
+  the two apart on screen.
+- **the search attributes**, which is how a support lead finds one trip out of thousands:
+
+```bash
+temporal workflow list --query "Traveler = 'Bill S. Preston, Esq.'"
+```
+
+**Advance to slide 15, the decision and the jump.** The trip is parked at
+`awaiting_review`. Tab B (Rufus): approve it.
+
+`workflow_audit` fires on the signal and logs that a decision arrived — not who made it,
+not what it was. It logs argument types, never their values. The approver's name lives in
+the signal's own argument in Event History, taken from an authenticated admin check
+(`web/app.py:178`), not a self-reported string. Open `WorkflowExecutionSignaled` in the
+Temporal UI if the room is compliance-minded.
+
+Then `execute jump` runs and the two chains around it are identical to slide 14's. Same
+chains, different activity, no new code. That repetition is the point of the board.
+
+Close on the timing: that approval could have arrived hours later. The grant lives 8
+hours and the exchange mints a fresh 120-second access token per activity attempt, so a
+late approval still travels.
+
+### Slide 16: additional demos
+
+Not scripted. Every hook is on one board so the room can pick. Runs that are already
+wired, though only the first two have been rehearsed as part of this runbook:
+
+- a regular non-premium trip (Ted, **Ace our history report**): no premium gate, no
+  approval hold, correlation id and search attributes still land
+- **Evil Ted** rather than Evil Bill, for the same forged-licence refusal
+- a late approval: start a flagged trip, leave it, come back
+- the command-line start above, which skips `client_auth` entirely and is caught at the
+  workflow edge instead
 
 ### Questions that come up
 
@@ -263,19 +294,25 @@ Two things to point at:
 
 ## Images
 
-Deck images are `00`-`15` plus `demo1`-`demo4`, in slide order. File `00` is slide 1, so a
-numbered file's slide number is one higher than its number, up to the demos. Every SVG in `images/` is
-on a slide; there are no spares. An earlier round generated one panel per interceptor for
-a longer version of the talk, and those were deleted rather than left lying around, so a
-file appearing here without a slide means something is stale.
+Deck images are `00`-`09`, `10-activity-headers`, `11-terms-to-interceptors`,
+`13-other-systems`, `15-questions`, plus `demo1`-`demo4`, in slide order. Every SVG in
+`images/` is on a slide and every slide has one; the generator deletes anything it no
+longer produces, so a stale file cannot linger.
+
+**The numbers have gaps at 12 and 14.** `12-one-booking-six` and `14-what-shipped` were
+cut from the talk, and the surviving files kept their names rather than renumbering the
+tail every time. So a numbered file's position is no longer its number plus one past slide
+12. Read the slide table above rather than inferring from filenames.
 
 Color carries meaning across the whole deck: **magenta** is a client interceptor,
 **amber** a workflow interceptor, **cyan** an activity interceptor, and **purple** one
-that spans workflow and activity. Slide 9 introduces the scheme and doubles as its
-legend. State (fired, refused, unused) is carried by fill and dashes instead, so the two
-signals never compete.
+that spans workflow and activity. Slide 9 introduces the scheme and doubles as its legend.
+State (fired, refused, unused) is carried by fill and dashes instead, so the two signals
+never compete.
 
-The four `demo*` images stay on screen while you drive the live demo. Each names the
-business requirements being proved and draws the interceptors on the booking where they
-run, inbound above the track and outbound below, lit when they fire and dashed when they
-do not.
+The four `demo*` images stay on screen while you drive. Slides 13 to 15 are one board per
+phase of a booking, and on those boards **one square is one hook**, not one interceptor:
+an interceptor that installs three hooks gets three squares, in the three places they
+fire. Squares stack vertically against the step they run from, inbound above it and
+outbound below it, top to bottom in the order they execute. Slide 16 is the older
+one-chip-per-interceptor board, kept because it is the only place all six appear at once.

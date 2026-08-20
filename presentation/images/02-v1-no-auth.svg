@@ -44,4 +44,10 @@
 <path d="M1057.84 471 L1073.84 471" fill="none" stroke="#8a95c0" stroke-width="1.8" marker-end="url(#a-muted)"/>
 <rect x="1075.84" y="452" width="81" height="38" rx="19.0" fill="#3ad29f" fill-opacity="0.14" stroke="#3ad29f" stroke-width="1.4"/>
 <text x="1116.2199999999998" y="476.04" font-size="14" fill="#3ad29f" font-weight="600" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', Menlo, ui-monospace, monospace" opacity="1.0">arrival</text>
+<rect x="604" y="590" width="604" height="86" rx="16" fill="#141b32" fill-opacity="1.0" stroke="#b58bff" stroke-width="1.6"/>
+<text x="626" y="624" font-size="17" fill="#b58bff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">CIRCUITS OF HISTORY</text>
+<line x1="626" y1="640" x2="1186" y2="640" stroke="#263056" stroke-width="1"/>
+<text x="626" y="652" font-size="14" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">the system that actually moves the booth</text>
+<path d="M688.08 494 L688.08 586" fill="none" stroke="#b58bff" stroke-width="1.8" marker-end="url(#a-purple)"/>
+<path d="M993.76 494 L993.76 586" fill="none" stroke="#b58bff" stroke-width="1.8" marker-end="url(#a-purple)"/>
 </svg>

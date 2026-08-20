@@ -740,12 +740,24 @@ def img_02_v1_no_auth():
     # Padding and gaps are tighter than elsewhere so the four pills clear the panel's
     # 22px inset. At pad=12/gap=26 the row is 565 wide against 560 of interior.
     x = 626
+    centers = {}
     for i, (label, color) in enumerate(nodes):
         w = pill_w(label, 14, True, 10)
         s += pill(x, 452, label, color, mono=True, h=38, size=14, pad=10)
+        centers[label] = x + w / 2
         if i < len(nodes) - 1:
             s += arrow(x + w + 2, 471, x + w + 18, 471, color="muted", sw=1.8)
         x += w + 20
+
+    # The backend the two real activities talk to. Drawn here because the whole security
+    # story later depends on the room already picturing a system on the other side of an
+    # activity: requirement 5 is about who that system thinks is calling it, and the
+    # token exchange exists to answer that. `hold for Rufus` and `arrival` have no arrow
+    # because neither calls out - one waits on a signal, the other is the return.
+    s += panel(604, 590, 604, 86, title="CIRCUITS OF HISTORY", accent=PURPLE)
+    s += text(626, 652, "the system that actually moves the booth", size=14, fill=MUTED)
+    for label in ("paradox_scan", "execute_jump"):
+        s += arrow(centers[label], 494, centers[label], 586, color="purple", sw=1.8)
     return s
 
 
