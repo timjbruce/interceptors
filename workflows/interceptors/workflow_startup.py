@@ -60,6 +60,8 @@ from temporalio.worker import (
     ActivityInboundInterceptor,
     ExecuteActivityInput,
     ExecuteWorkflowInput,
+    HandleQueryInput,
+    HandleSignalInput,
     Interceptor,
     StartActivityInput,
     WorkflowInboundInterceptor,
@@ -142,11 +144,50 @@ class WorkflowStartupInterceptor(Interceptor):
 
 
 class _StartupWorkflowInbound(WorkflowInboundInterceptor):
+    # The trip's id, remembered on the instance so the signal and query handlers can put
+    # it back on their own context. See `_seed_correlation_id`. Declared at CLASS level
+    # so a handler can never meet a missing attribute: the SDK always calls `init()`
+    # before dispatching anything, but a handler that reads this must not depend on that.
+    _cid: Optional[str] = None
+
     def init(self, outbound: WorkflowOutboundInterceptor) -> None:
         # Keep the reference: `execute_workflow` needs to hand the grant to the
         # outbound half so it can stamp the verification activity's header.
         self._outbound = _StartupWorkflowOutbound(outbound)
         super().init(self._outbound)
+
+    def _seed_correlation_id(self) -> str:
+        """Set `correlation_id` on the CURRENT task's context, and return it.
+
+        Why every handler has to call this, and why setting it once in
+        `execute_workflow` was not enough:
+
+        The SDK runs the workflow body, each signal and each query as SEPARATE asyncio
+        tasks (`_workflow_instance.py:1096`, `:2503`, `:791`), and `create_task` is called
+        with `context=None`, so each task gets its own COPY of the context taken when the
+        task was created. A `ContextVar.set()` inside the workflow-body task is therefore
+        invisible to a signal or query task: they were not created from it. The result was
+        that every `handle_signal` and `handle_query` line logged the filter's placeholder
+        instead of the trip's id, which is the audit trail for requirement 3.
+
+        Deterministic and replay-safe: the id comes from the start header or from the run
+        id, both of which are fixed for the life of the run.
+        """
+        cid = self._cid or f"cot-{workflow.info().run_id}"
+        self._cid = cid
+        correlation_id.set(cid)
+        return cid
+
+    async def handle_signal(self, input: HandleSignalInput) -> None:
+        # Runs before the audit interceptor's own `handle_signal`, because this
+        # interceptor is registered first and inbound chains run in registration order.
+        # So the id is in place by the time the audit line is written.
+        self._seed_correlation_id()
+        return await super().handle_signal(input)
+
+    async def handle_query(self, input: HandleQueryInput) -> Any:
+        self._seed_correlation_id()
+        return await super().handle_query(input)
 
     async def execute_workflow(self, input: ExecuteWorkflowInput) -> Any:
         # (1) Correlation id: from the header if present, else deterministic from
@@ -160,8 +201,8 @@ class _StartupWorkflowInbound(WorkflowInboundInterceptor):
         # `grep <cid>` return somebody else's trip. Longer log lines are the whole cost.
         cpayload = (input.headers or {}).get(CORRELATION_HEADER_KEY)
         cid = workflow.payload_converter().from_payload(cpayload, str) if cpayload is not None else None
-        cid = cid or f"cot-{workflow.info().run_id}"
-        correlation_id.set(cid)
+        self._cid = cid or f"cot-{workflow.info().run_id}"
+        correlation_id.set(self._cid)
 
         # (2) Guardrail. Read the grant off the start header and hand it to an
         # ACTIVITY to be verified — see this module's docstring and

@@ -4,28 +4,24 @@
 <rect width="1280" height="720" fill="url(#halo)"/>
 <rect width="1280" height="720" fill="url(#grid)" opacity="0.35"/>
 <rect x="72" y="60" width="5" height="92" rx="2.5" fill="#6ce0ff"/>
-<text x="100" y="100" font-size="42" fill="#e7ecff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Rufus needed to research the answer</text>
-<text x="100" y="140" font-size="21" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">on to Temporal's AI Developer Skill</text>
+<text x="100" y="100" font-size="42" fill="#e7ecff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Interceptors Overview</text>
+<text x="100" y="140" font-size="21" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">a quick overview</text>
 <g transform="translate(1148 168) scale(0.72)"><g transform="rotate(-24) translate(-30 -6)" opacity="0.85"><ellipse cx="0" cy="0" rx="13" ry="16" fill="#141b32" stroke="#b58bff" stroke-width="1.8"/><rect x="-2.5" y="-46" width="5" height="32" rx="2" fill="#141b32" stroke="#b58bff" stroke-width="1.6"/><circle cx="0" cy="2" r="4" fill="none" stroke="#b58bff" stroke-width="1.4"/></g><path d="M-27 20 L-23 -24 Q-23 -38 0 -38 Q23 -38 23 -24 L27 20 Z" fill="#1b2444" stroke="#6ce0ff" stroke-width="2.2" stroke-linejoin="round"/><path d="M0 -34 V20" stroke="#6ce0ff" stroke-width="1.4" opacity="0.7"/><path d="M-11 -36 l11 10 11 -10" fill="none" stroke="#6ce0ff" stroke-width="1.8"/><circle cx="0" cy="-54" r="17" fill="#1b2444" stroke="#6ce0ff" stroke-width="2.2"/><path d="M-17 -56 q0 -17 17 -17 q17 0 17 17 q-5 -9 -17 -9 q-12 0 -17 9 z" fill="#263056" stroke="#6ce0ff" stroke-width="1.8"/><rect x="-12" y="-60" width="24" height="8" rx="3" fill="#0d132a" stroke="#6ce0ff" stroke-width="1.6"/><path d="M-11 -47 q11 13 22 0 q-3 11 -11 11 q-8 0 -11 -11 z" fill="#263056" stroke="#6ce0ff" stroke-width="1.6"/></g>
-<rect x="112" y="202" width="192" height="68" rx="12" fill="#1b2444" fill-opacity="0.9" stroke="#6ce0ff" stroke-width="1.6"/>
-<text x="208.0" y="242.48" font-size="18" fill="#e7ecff" font-weight="600" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Interceptor A</text>
-<rect x="112" y="320" width="192" height="68" rx="12" fill="#1b2444" fill-opacity="0.9" stroke="#b58bff" stroke-width="1.6"/>
-<text x="208.0" y="360.48" font-size="18" fill="#e7ecff" font-weight="600" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Interceptor B</text>
-<rect x="764" y="320" width="192" height="68" rx="12" fill="#1b2444" fill-opacity="0.9" stroke="#b58bff" stroke-width="1.6"/>
-<text x="860.0" y="360.48" font-size="18" fill="#e7ecff" font-weight="600" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Interceptor B</text>
-<rect x="764" y="202" width="192" height="68" rx="12" fill="#1b2444" fill-opacity="0.9" stroke="#6ce0ff" stroke-width="1.6"/>
-<text x="860.0" y="242.48" font-size="18" fill="#e7ecff" font-weight="600" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Interceptor A</text>
-<rect x="444" y="426" width="224" height="88" rx="12" fill="#1b2444" fill-opacity="0.9" stroke="#3ad29f" stroke-width="1.6"/>
-<text x="556.0" y="464.0" font-size="18" fill="#e7ecff" font-weight="600" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Temporal's work</text>
-<text x="556.0" y="488.0" font-size="14" fill="#8a95c0" font-weight="400" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">start_workflow · execute_activity</text>
-<path d="M208 272 L208 314" fill="none" stroke="#6ce0ff" stroke-width="2.2" marker-end="url(#a-cyan)"/>
-<path d="M208 390 L208 470 L438 470" fill="none" stroke="#b58bff" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#a-purple)"/>
-<path d="M674 470 L860 470 L860 394" fill="none" stroke="#3ad29f" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#a-ok)"/>
-<path d="M860 318 L860 276" fill="none" stroke="#b58bff" stroke-width="2.2" marker-end="url(#a-purple)"/>
-<text x="112" y="514" font-size="19" fill="#6ce0ff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">on the way in</text>
-<text x="112" y="538" font-size="14" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">inspect, reject, stamp the header</text>
-<text x="764" y="514" font-size="19" fill="#3ad29f" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">on the way out</text>
-<text x="764" y="538" font-size="14" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">log, measure, react</text>
+<rect x="490" y="176" width="300" height="56" rx="12" fill="#1b2444" fill-opacity="0.9" stroke="#e7ecff" stroke-width="1.6"/>
+<text x="640.0" y="198.0" font-size="18" fill="#e7ecff" font-weight="600" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">your call</text>
+<text x="640.0" y="222.0" font-size="14" fill="#8a95c0" font-weight="400" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">start_workflow · execute_activity</text>
+<path d="M640 234 L640 260" fill="none" stroke="#6ce0ff" stroke-width="2.2" marker-end="url(#a-cyan)"/>
+<rect x="300" y="264" width="680" height="250" rx="16" fill="#141b32" fill-opacity="0.55" stroke="#6ce0ff" stroke-width="1.6"/>
+<text x="326" y="296" font-size="22" fill="#6ce0ff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Interceptor</text>
+<text x="326" y="344" font-size="18" fill="#6ce0ff" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">on the way in</text>
+<text x="326" y="366" font-size="13" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">inspect, reject, stamp the header</text>
+<text x="326" y="448" font-size="18" fill="#3ad29f" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">on the way out</text>
+<text x="326" y="470" font-size="13" fill="#8a95c0" font-weight="400" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">log, measure, react</text>
+<path d="M770 308 L770 344" fill="none" stroke="#6ce0ff" stroke-width="2.2" marker-end="url(#a-cyan)"/>
+<rect x="580" y="348" width="380" height="76" rx="12" fill="#1b2444" fill-opacity="0.9" stroke="#3ad29f" stroke-width="1.6"/>
+<text x="770.0" y="380.0" font-size="18" fill="#e7ecff" font-weight="600" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">Temporal's work</text>
+<text x="770.0" y="404.0" font-size="14" fill="#8a95c0" font-weight="400" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0">what the call actually does</text>
+<path d="M770 428 L770 546" fill="none" stroke="#3ad29f" stroke-width="2.2" marker-end="url(#a-ok)"/>
 <rect x="72" y="556" width="1136" height="108" rx="10" fill="#3ad29f" fill-opacity="0.10" stroke="#3ad29f" stroke-opacity="0.5" stroke-width="1.4"/>
 <rect x="72" y="556" width="5" height="108" rx="2.5" fill="#3ad29f"/>
 <text x="90" y="591" font-size="14" fill="#3ad29f" font-weight="700" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" opacity="1.0" letter-spacing="1.2">INTERCEPTORS ARE BUSINESS GLUE</text>

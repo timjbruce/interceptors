@@ -7,7 +7,7 @@ one system.
 
     python3 presentation/images/build_images.py
 
-One set is produced: `00`-`15` plus `demo1`-`demo4`, in slide order. This is the
+One set is produced: `00`-`15` plus `demo1`-`demo3`, in slide order. This is the
 talk, and there are no spares. A numbered file's slide number is one higher than its
 number, so `00-title` is slide 1. Anything in the directory that this file no longer
 produces is deleted on the next run.
@@ -972,34 +972,37 @@ def img_06_every_workflow():
 
 
 def img_07_middleware():
+    """Slide 8: what an interceptor IS, at its simplest.
+
+    ONE interceptor, labelled just "Interceptor". The chain, the ordering and the
+    delegate-or-short-circuit rule all live later (slides 9 and 10) and in the notes; this
+    slide only has to land the shape: your call goes in, the interceptor gets it on the way
+    in, the real Temporal work happens inside, and the interceptor gets it again on the way
+    out. Drawing the work box INSIDE the interceptor box is the point - an interceptor
+    wraps a call, it is not a step beside it.
+    """
     s = head()
-    s += slide_title("Rufus needed to research the answer",
-                     "on to Temporal's AI Developer Skill", accent=CYAN)
+    s += slide_title("Interceptors Overview", "a quick overview", accent=CYAN)
     s += rufus(1148, 168, scale=0.72)
 
-    # Down the left (on the way in), across to the work, back up the right (on the way out).
-    a_top, a_bot = 202, 270
-    b_top, b_bot = 320, 388
-    bot = 470
-    lx, rx = 208, 860
-
-    s += box(112, a_top, 192, 68, "Interceptor A", color=CYAN, size=18)
-    s += box(112, b_top, 192, 68, "Interceptor B", color=PURPLE, size=18)
-    s += box(764, b_top, 192, 68, "Interceptor B", color=PURPLE, size=18)
-    s += box(764, a_top, 192, 68, "Interceptor A", color=CYAN, size=18)
-    s += box(444, bot - 44, 224, 88, "Temporal's work", color=OK, size=18,
+    s += box(490, 176, 300, 56, "your call", color=INK, size=18,
              sub="start_workflow · execute_activity")
+    s += arrow(640, 234, 640, 260, color="cyan", sw=2.2)
 
-    s += arrow(lx, a_bot + 2, lx, b_top - 6, color="cyan", sw=2.2)
-    s += elbow([(lx, b_bot + 2), (lx, bot), (438, bot)], color="purple", sw=2.2)
-    s += elbow([(674, bot), (rx, bot), (rx, b_bot + 6)], color="ok", sw=2.2)
-    s += arrow(rx, b_top - 2, rx, a_bot + 6, color="purple", sw=2.2)
+    s += panel(300, 264, 680, 250, accent=CYAN, fill=PANEL, r=16, fill_op=0.55)
+    s += text(326, 296, "Interceptor", size=22, weight=700, fill=CYAN)
 
-    # Below the return line, where neither vertical leg can run through the text.
-    s += text(112, bot + 44, "on the way in", size=19, weight=700, fill=CYAN)
-    s += text(112, bot + 68, "inspect, reject, stamp the header", size=14, fill=MUTED)
-    s += text(764, bot + 44, "on the way out", size=19, weight=700, fill=OK)
-    s += text(764, bot + 68, "log, measure, react", size=14, fill=MUTED)
+    s += text(326, 344, "on the way in", size=18, weight=700, fill=CYAN)
+    s += text(326, 366, "inspect, reject, stamp the header", size=13, fill=MUTED)
+    s += text(326, 448, "on the way out", size=18, weight=700, fill=OK)
+    s += text(326, 470, "log, measure, react", size=13, fill=MUTED)
+
+    s += arrow(770, 308, 770, 344, color="cyan", sw=2.2)
+    s += box(580, 348, 380, 76, "Temporal's work", color=OK, size=18,
+             sub="what the call actually does")
+    # One arrow out, crossing the interceptor's own border: the call leaves through the
+    # same object it entered. Two stubs at different x read as two separate things.
+    s += arrow(770, 428, 770, 546, color="ok", sw=2.2)
 
     s += note_only(72, 556, 1136, [
         "Timers, queues and state management just work in Temporal. Auth, logging, tracing "
@@ -1121,62 +1124,92 @@ def img_09_how_to_build():
     return s
 
 
-def img_10_should_it_be():
-    """Slide 11: guidance on when to consider an interceptor.
+def img_10_activity_headers():
+    """Slide 11: passing values to activities without changing their signatures.
 
-    Deliberately not a decision tree. The earlier version was one, and a tree forces every
-    item to be a gate with a single path through, which these are not: they are independent
-    signals. Several can be true at once and there is no order to them. What replaces the
-    branches is a second column naming the things that are somebody else's job.
+    Deliberately generic. It names no interceptor, no header key and no file from this
+    project, because the shape is the reusable part and the demo is what proves it
+    afterwards. Slide 12 is where this stops being abstract.
+
+    The two ends of the row are business code and are marked unchanged; the middle two are
+    the plumbing, written once and registered once. The dashed marker between them is the
+    only hop that is not a function call.
     """
+    BW, BH, BY = 248, 170, 214
+    XS = [72, 368, 664, 960]
     s = head()
-    s += slide_title("When to reach for one",
-                     "Cross-cutting behavior, across many calls, without touching business "
-                     "logic.", accent=WARN)
+    s += slide_title(
+        "Passing values to activities without changing signatures",
+        "One interceptor stamps it on the way out, another reads it on the way in, and "
+        "the activity just uses it.",
+        accent=C_ACTIVITY)
 
-    reasons = [
-        ("OBSERVABILITY",
-         "Correlation ids, request ids and trace spans, on every workflow and activity."),
-        ("CONTEXT PROPAGATION",
-         "Metadata on headers, client to workflow to activity. No signature changes."),
-        ("AUTHENTICATION AND AUTHORIZATION",
-         "Check the caller before a workflow, signal or update is ever handled."),
-        ("VALIDATION, IN ONE PLACE",
-         "Arguments and results, before your code sees them or a request goes out."),
-        ("CONTEXT LIFECYCLE",
-         "Set it and clear it around the boundary, in a finally, every time."),
+    steps = [
+        ("1", "YOUR WORKFLOW CODE", LINE, INK, "calls the activity",
+         "Passes its own business arguments. It never mentions the carried value."),
+        ("2", "WORKFLOW OUTBOUND INTERCEPTOR", C_WORKFLOW, C_WORKFLOW, "stamps the header",
+         "Puts the value on the outgoing activity header. Fires on every activity."),
+        ("3", "ACTIVITY INBOUND INTERCEPTOR", C_ACTIVITY, C_ACTIVITY, "reads it into context",
+         "Lifts the value off the header onto a context variable, before the body runs."),
+        ("4", "YOUR ACTIVITY CODE", OK, OK, "uses the context",
+         "Reads the context variable, or ignores it. Its parameters stay business-only."),
     ]
-    y = 192
-    for label, detail in reasons:
-        s += panel(88, y, 672, 78, accent=CYAN, fill=PANEL, r=12, fill_op=0.85)
-        s += f'<rect x="88" y="{y}" width="4" height="78" rx="2" fill="{CYAN}"/>\n'
-        s += text(112, y + 30, label, size=15, weight=700, fill=CYAN, spacing=1.1)
-        s += text(112, y + 58, detail, size=15, fill=INK, op=0.88)
-        y += 92
-
-    s += panel(792, 192, 400, 268, title="USE SOMETHING ELSE INSTEAD", accent=MUTED)
-    others = [
-        ("Sharing logic between workflows", "a base class or a helper"),
-        ("Changing the bytes in a payload", "a data converter or codec"),
-        ("Needs to be a step in Event History", "an activity"),
-    ]
-    # Keep each answer tight to its own item: at even spacing the answer reads as though it
-    # belongs to the item below it.
-    oy = 246
-    for what, instead in others:
-        lines = wrap(what, 38)
-        for j, ln in enumerate(lines):
-            s += text(814, oy + j * 20, ln, size=14, fill=INK, op=0.85)
-        s += text(824, oy + 20 * len(lines) + 2, f"\u2192  {instead}", size=14, fill=OK,
+    for i, (num, role, border, tint, title, body) in enumerate(steps):
+        x = XS[i]
+        s += panel(x, BY, BW, BH, accent=border, fill=PANEL2, r=12, fill_op=0.9)
+        s += (f'<circle cx="{x + 26}" cy="{BY + 28}" r="14" fill="{tint}" '
+              f'fill-opacity="0.16" stroke="{tint}" stroke-width="1.4"/>\n')
+        s += text(x + 26, BY + 33, num, size=14, anchor="middle", weight=700, fill=tint,
                   mono=True)
-        oy += 20 * len(lines) + 40
+        for j, ln in enumerate(wrap(role, 22)):
+            s += text(x + 50, BY + 26 + j * 14, ln, size=9.5, fill=tint, weight=700,
+                      spacing=1.2)
+        s += text(x + 20, BY + 78, title, size=17, weight=700)
+        for j, ln in enumerate(wrap(body, 29)):
+            s += text(x + 20, BY + 104 + j * 18, ln, size=12, fill=MUTED)
+        if i:
+            s += arrow(XS[i - 1] + BW + 6, BY + BH / 2, x - 8, BY + BH / 2,
+                       color="cyan", sw=2.2)
 
-    s += note_only(792, 484, 400, [
-        "Workflow interceptors must be replay safe",
-        "and avoid non-deterministic side effects. If",
-        "you need a clock or the network, schedule an",
-        "activity.",
-    ], color=WARN, title="THE ONE CONSTRAINT", size=13, lh=18, pad=12)
+    # The one hop that is not a function call: the value crosses the wire here.
+    s += text(640, BY - 16, "the activity header", size=12, anchor="middle", fill=C_ACTIVITY,
+              weight=700)
+    s += (f'<line x1="640" y1="{BY - 8}" x2="640" y2="{BY + BH + 8}" stroke="{C_ACTIVITY}" '
+          f'stroke-width="1.6" stroke-dasharray="5 5" opacity="0.55"/>\n')
+
+    # Who writes what: the middle two are plumbing, the two ends are business code.
+    by2 = BY + BH
+    s += (f'<path d="M368 {by2 + 12} L368 {by2 + 20} L912 {by2 + 20} L912 {by2 + 12}" '
+          f'fill="none" stroke="{MUTED}" stroke-width="1.4" opacity="0.5"/>\n')
+    s += text(640, by2 + 40, "written once, registered on the worker, and every activity "
+                             "gets it", size=11, anchor="middle", fill=MUTED)
+    for cx in (196, 1084):
+        s += text(cx, by2 + 26, "unchanged", size=11, anchor="middle", fill=MUTED)
+
+    # --- what it replaces --------------------------------------------------------------
+    s += panel(72, 452, 548, 112, accent=BAD, fill=PANEL, r=12, fill_op=0.5)
+    s += text(94, 476, "WITHOUT IT", size=11, fill=BAD, weight=700, spacing=1.3)
+    s += text(94, 504, "def my_activity(order, region, tenant, trace, token)", size=13,
+              mono=True, fill=MUTED)
+    s += text(94, 532, "every signature, every call site, and every value added later",
+              size=11, fill=MUTED)
+
+    s += panel(660, 452, 548, 112, accent=OK, fill=PANEL, r=12, fill_op=0.5)
+    s += text(682, 476, "WITH IT", size=11, fill=OK, weight=700, spacing=1.3)
+    s += text(682, 504, "def my_activity(order, region)", size=13, mono=True, fill=INK)
+    s += text(682, 532, "the value arrives out of band; the signature never learns of it",
+              size=11, fill=OK, op=0.85)
+
+    # --- the part people get wrong -----------------------------------------------------
+    s += panel(72, 584, 1136, 92, accent=WARN, fill=PANEL, r=12, fill_op=0.45)
+    s += text(94, 608, "BEFORE YOU PUT SOMETHING ON A HEADER", size=11, fill=WARN,
+              weight=700, spacing=1.3)
+    s += text(94, 634, "It is written to Event History and stays there, readable by anyone "
+                       "with namespace read access. Send a reference or a", size=12, fill=INK,
+              op=0.9)
+    s += text(94, 656, "short-lived, narrowly scoped credential, never the user's own. And "
+                       "a payload codec does not cover headers by default.",
+              size=12, fill=INK, op=0.9)
     return s
 
 
@@ -1215,44 +1248,6 @@ def img_11_terms_to_interceptors():
         "One is wired into every client that starts a trip. Five are wired once on the worker",
         "and inherited by every workflow there, including the ones nobody has written yet.",
     ], color=OK, title="INTERCEPTORS HELP MEET REQUIREMENT 6")
-    return s
-
-
-def img_12_one_booking():
-    s = head()
-    s += slide_title("One booking, all six",
-                     "In firing order. No workflow or activity code decides any of it.",
-                     accent=OK)
-
-    s += (f'<line x1="130" y1="196" x2="130" y2="640" stroke="{LINE}" stroke-width="2"/>\n')
-    s += text(130, 182, "time", size=13, fill=MUTED, anchor="middle")
-
-    rows = [
-        ("1", "client_auth", "client outbound", C_CLIENT,
-         "verify the license, authorize the trip, mint a grant", "a refusal costs nothing"),
-        ("2", "workflow_startup", "workflow inbound", C_WORKFLOW,
-         "one id for the trip, a guardrail, searchable tags", "the trip is findable"),
-        ("3", "grant_propagation", "workflow in and out", C_BOTH,
-         "carry the context onto every activity", "no argument plumbing"),
-        ("4", "activity_logging", "activity inbound", C_ACTIVITY,
-         "start, duration, outcome and the trip id, one format", "one line per activity"),
-        ("5", "token_exchange", "activity inbound", C_ACTIVITY,
-         "grant plus worker identity for a 120s credential", "acting on behalf of"),
-        ("6", "workflow_audit", "workflow inbound", C_WORKFLOW,
-         "every signal and query that arrives", "who approved it, and when"),
-    ]
-    y = 210
-    for n, name, where, color, what, artifact in rows:
-        s += (f'<circle cx="130" cy="{y + 30}" r="17" fill="{BG}" stroke="{color}" '
-              f'stroke-width="2.2"/>\n')
-        s += text(130, y + 36, n, size=15, anchor="middle", fill=color, weight=700, mono=True)
-        s += panel(178, y, 620, 60, accent=color, fill=PANEL, r=12, fill_op=0.85)
-        s += text(198, y + 26, name, size=17, mono=True, weight=700, fill=color)
-        s += text(198, y + 48, what, size=14, fill=MUTED)
-        s += text(786, y + 26, where, size=13, fill=color, anchor="end", op=0.8)
-        s += arrow(806, y + 30, 844, y + 30, color="muted", sw=1.8)
-        s += pill(850, y + 12, artifact, OK, size=13, h=32, fill_op=0.10)
-        y += 74
     return s
 
 
@@ -1310,10 +1305,12 @@ _TRACK = [("book", 185), ("workflow start", 368), ("paradox scan", 551),
 # category, matching slides 8 to 10; state comes from fill, dashes and label color.
 # The leading digits are FIRING order, not registration order. activity_logging is\n# registered before token_exchange in worker.py, so it is outer on the activity-inbound\n# chain and runs first. See workflows/worker.py:52. Do not renumber these to match the\n# order of the worker's interceptors= list.\n# key -> (chip label, chip seam, node index, on the inbound row?, category color, every
 # hook it installs). The chip names the hook that puts it where it sits on the track and
-# adds "+2" when there are more; the legend at the foot of the slide spells them all out.
-# Two of these install three hooks each, so a single-hook chip understated them.
+# names ONLY the hook that puts it there. Two of these install three hooks each, and the
+# chip used to append "+2" for the rest; that read as "two more interceptors fire here"
+# rather than "this interceptor installs two more hooks", so it is gone. The legend at the
+# foot of the slide still spells every hook out, and the rest is a talking point.
 _BADGES = {
-    "workflow_startup": ("2 workflow_startup", "workflow inbound +2", 1, True, C_WORKFLOW,
+    "workflow_startup": ("2 workflow_startup", "workflow inbound", 1, True, C_WORKFLOW,
                          "workflow in · workflow out · activity in"),
     "token_exchange": ("5 token_exchange", "activity inbound", 2, True, C_ACTIVITY,
                        "activity inbound"),
@@ -1323,9 +1320,16 @@ _BADGES = {
                          "activity inbound"),
     "client_auth": ("1 client_auth", "client outbound", 0, False, C_CLIENT,
                     "client outbound"),
-    "grant_propagation": ("3 grant_propagation", "workflow outbound +2", 1, False, C_BOTH,
+    "grant_propagation": ("3 grant_propagation", "workflow outbound", 1, False, C_BOTH,
                           "workflow in · workflow out · activity in"),
 }
+
+
+# Requirements 1 to 5, in order. Requirement 6 ("every system, not just the booth") has no
+# run behind it, so it never appears on a demo card.
+_ALL_TERMS = ["1 · only real travelers", "2 · cleared missions only",
+              "3 · prove who approved", "4 · see what happened on a trip",
+              "5 · name the traveler"]
 
 
 def workflow_track(*, reached, states, stop_note=None, skip=()):
@@ -1388,13 +1392,20 @@ def demo_card(*, title, subtitle, accent, terms, reached, states, stop_note,
     s = head()
     s += slide_title(title, subtitle, accent=accent)
 
-    # The business requirements in play on this run. Requirement 1 is on all four,
+    # The business requirements in play on this run. Requirement 1 is on all of them,
     # because authentication is the precondition for every run rather than something a
     # particular one proves.
+    #
+    # Five requirements overflow the row at the default size, so step the pills down one
+    # notch when the row would cross the right margin. Slides with fewer keep the larger
+    # size, which is why demo 2 still reads at 14.
+    size, pad, gap = 14, 16, 12
+    if 96 + sum(pill_w(t, size, False, pad) + gap for t in terms) - gap > 1184:
+        size, pad, gap = 13, 13, 10
     tx = 96
     for term in terms:
-        s += pill(tx, 186, term, accent, size=14, h=34, fill_op=0.12)
-        tx += pill_w(term, 14, False, 16) + 12
+        s += pill(tx, 186, term, accent, size=size, h=34, fill_op=0.12, pad=pad)
+        tx += pill_w(term, size, False, pad) + gap
 
     s += workflow_track(reached=reached, states=states, stop_note=stop_note, skip=skip)
 
@@ -1415,50 +1426,216 @@ def demo_card(*, title, subtitle, accent, terms, reached, states, stop_note,
     return s
 
 
-def img_demo1():
+# ---------------------------------------------------------------------------
+# The demo, cut into three slices
+# ---------------------------------------------------------------------------
+#
+# One board per phase of a booking instead of one board for the whole thing. The point of
+# the cut is that a smaller stretch of workflow leaves room to draw EVERY hook that fires
+# in that stretch, one square per hook, numbered in firing order. The old cards had one
+# square per interceptor, which forced a "+2" on the two that install three hooks each and
+# left the firing order of a single call unshowable.
+#
+# Slice 1 is the client and carries demo 1 on its own, because a refused booking never
+# reaches Temporal. Demo 2 starts on the same board and passes through it.
+#
+# Ordering is the SDK's, verified rather than recalled: activity-inbound and
+# workflow-inbound chains run in registration order (worker/_activity.py:710 and
+# worker/_workflow_instance.py:395 both wrap in reverse, so first-registered ends up
+# outermost), and workflow-outbound runs in REVERSE registration order because each
+# inbound wraps the outbound before passing it down. Registration order is worker.py:53-66.
+
+# A square names an interceptor and nothing else. What it DOES belongs in the speaker
+# notes. Squares stack VERTICALLY against the step they run from: inbound above it,
+# outbound below it, and top to bottom is the order they execute in. The stack itself
+# carries the ordering, so the board does not explain registration order or reverse order
+# anywhere; those are talking points.
+_CHIP_H = 40
+_CHIP_GAP = 8
+
+
+def _chip_w(label):
+    return len(label) * 13 * 0.62 + 28
+
+
+def _chip(x, y, num, name, color, *, w=None):
+    label = f"{num}  {name}"
+    w = w or _chip_w(label)
+    s = panel(x, y, w, _CHIP_H, accent=color, fill=PANEL2, r=9, fill_op=0.9)
+    s += text(x + 14, y + 26, label, size=13, mono=True, weight=700, fill=color)
+    return s
+
+
+def _stack(cx, y, chips, label, *, up):
+    """A vertical run of squares centred on `cx`, one per hook, in execution order.
+
+    up=True  -> the stack sits ABOVE the step and `y` is its bottom edge (inbound).
+    up=False -> the stack sits BELOW the step and `y` is its top edge (outbound).
+
+    Every square in one stack takes the width of the widest, so the column reads as a
+    column rather than a ragged pile.
+    """
+    n = len(chips)
+    span = n * _CHIP_H + (n - 1) * _CHIP_GAP
+    top = y - span if up else y
+    w = max(_chip_w(f"{num}  {name}") for num, name, _ in chips)
+    s = text(cx, top - 12, label, size=10.5, anchor="middle", fill=MUTED, weight=700,
+             spacing=1.2)
+    for i, (num, name, color) in enumerate(chips):
+        s += _chip(cx - w / 2, top + i * (_CHIP_H + _CHIP_GAP), num, name, color, w=w)
+    return s, top, top + span
+
+
+def _slice_head(title, subtitle, accent, terms):
+    s = slide_title(title, subtitle, accent=accent)
+    tx = 72
+    for term in terms:
+        s += pill(tx, 172, term, accent, size=13, h=30, pad=13, fill_op=0.12)
+        tx += pill_w(term, 13, False, 13) + 10
+    return s
+
+
+def _slice_track(nodes, y, *, h=64):
+    n = len(nodes)
+    w = (1136 - (n - 1) * 60) / n
+    s, centers = "", []
+    for i, (label, sub, color, live) in enumerate(nodes):
+        x = 72 + i * (w + 60)
+        cx = x + w / 2
+        centers.append(cx)
+        s += panel(x, y, w, h, accent=color if live else MUTED, fill=PANEL2 if live else PANEL,
+                   r=10, fill_op=0.9 if live else 0.4, dash=None if live else "5 5")
+        s += text(cx, y + 27, label, size=16, anchor="middle", weight=700,
+                  fill=INK if live else MUTED, op=1 if live else 0.6)
+        s += text(cx, y + 47, sub, size=10.5, anchor="middle", fill=MUTED,
+                  op=1 if live else 0.6)
+        if i:
+            s += arrow(centers[i - 1] + w / 2 + 4, y + h / 2, cx - w / 2 - 6, y + h / 2,
+                       color="cyan" if live else "muted", sw=2, dash=not live)
+    return s, centers, w
+
+
+def _leader(cx, y1, y2, color):
+    return (f'<line x1="{cx}" y1="{y1}" x2="{cx}" y2="{y2}" stroke="{color}" '
+            f'stroke-width="1.6" stroke-dasharray="4 4" opacity="0.9"/>\n')
+
+
+# Fires on the way OUT to an activity, and again on the way IN to it. Boards 2 and 3 both
+# draw these against their activity step.
+_OUT = [("grant_propagation", C_BOTH), ("workflow_startup", C_WORKFLOW)]
+_IN = [("workflow_startup", C_WORKFLOW), ("activity_logging", C_ACTIVITY),
+       ("grant_propagation", C_BOTH), ("token_exchange", C_ACTIVITY)]
+
+TRACK_Y = 452
+
+
+def _activity_stacks(code_cx, act_cx, n):
+    """Workflow outbound under the WORKFLOW, activity inbound above the ACTIVITY.
+
+    The outbound hook fires when the workflow asks for an activity, so it belongs under a
+    workflow box, not under the activity it is reaching for. That is what the "workflow
+    code" step on the track exists to give it.
+    """
+    below, btop, _ = _stack(code_cx, TRACK_Y + 64 + 46,
+                            [(n + i, nm, c) for i, (nm, c) in enumerate(_OUT)],
+                            "WORKFLOW OUTBOUND", up=False)
+    # Stop the leader above the stack's label instead of running through it.
+    s = below + _leader(code_cx, TRACK_Y + 68, btop - 26, C_BOTH)
+    above, top, _ = _stack(act_cx, TRACK_Y - 34,
+                           [(n + 2 + i, nm, c) for i, (nm, c) in enumerate(_IN)],
+                           "ACTIVITY INBOUND", up=True)
+    s += above + _leader(act_cx, TRACK_Y - 34, TRACK_Y - 4, C_ACTIVITY)
+    return s
+
+
+def img_demo1_client():
+    """Board 1: the client. Carries demo 1 on its own, and opens demo 2.
+
+    `client_auth` hangs BELOW `start_workflow` because that is the call it intercepts:
+    it is a client OUTBOUND hook on start_workflow, not a step of its own between the
+    booking and the call.
+    """
+    s = head()
+    s += _slice_head("Demo 1: at the client", "Requirements 1 and 2. Demo 2 starts on this "
+                     "same board, and passes.", WARN,
+                     ["1 · only real travelers", "2 · cleared missions only"])
+
+    nodes = [("book", "in the web app", CYAN, True),
+             ("start_workflow", "the client call", CYAN, True),
+             ("Temporal", "a workflow exists", CYAN, True)]
+    track, centers, nw = _slice_track(nodes, 300)
+    s += track
+    below, btop, bbot = _stack(centers[1], 410, [(1, "client_auth", C_CLIENT)],
+                               "CLIENT OUTBOUND", up=False)
+    s += below + _leader(centers[1], 368, btop - 26, C_CLIENT)
+
+    # Refused, and the call never leaves: the X sits on the hop to Temporal.
+    gx = (centers[1] + centers[2]) / 2
+    s += mark(gx, 332, "bad", r=17)
+    s += text(gx, 250, "refused", size=15, anchor="middle", fill=BAD, weight=700)
+    s += text(gx, 272, "nothing in Temporal", size=11, anchor="middle", fill=MUTED)
+
+    outcomes = [("Ted", "valid licence, wrong group", "refused", BAD),
+                ("Evil Ted", "forged licence", "refused", BAD),
+                ("Bill", "premium, cleared", "passes", OK)]
+    for i, (who, why, what, color) in enumerate(outcomes):
+        x = 72 + i * 388
+        s += panel(x, 560, 360, 62, accent=color, fill=PANEL, r=10, fill_op=0.5)
+        s += text(x + 16, 584, who, size=14, weight=700, fill=color)
+        s += text(x + 16, 604, why, size=11, fill=MUTED)
+        s += text(x + 344, 592, what, size=13, anchor="end", weight=700, fill=color)
+    return s
+
+
+def img_demo2_workflow_opens():
+    """Board 2: the workflow opens and runs its first business activity."""
+    s = head()
+    s += _slice_head("Demo 2: the workflow opens",
+                     "Requirements 1, 4 and 5.", OK,
+                     ["1 · only real travelers", "4 · see what happened on a trip",
+                      "5 · name the traveler"])
+
+    nodes = [("workflow start", "the trip begins", C_WORKFLOW, True),
+             ("workflow code", "asks for an activity", C_WORKFLOW, True),
+             ("paradox scan", "an activity", CYAN, True)]
+    track, centers, nw = _slice_track(nodes, TRACK_Y)
+    s += track
+    above, top, _ = _stack(centers[0], TRACK_Y - 34,
+                           [(1, "workflow_startup", C_WORKFLOW),
+                            (2, "grant_propagation", C_BOTH)], "WORKFLOW INBOUND", up=True)
+    s += above + _leader(centers[0], TRACK_Y - 34, TRACK_Y - 4, C_WORKFLOW)
+    s += _activity_stacks(centers[1], centers[2], 3)
+    return s
+
+
+def img_demo3_decision():
+    """Board 3: the decision arrives, the jump runs, the workflow ends."""
+    s = head()
+    s += _slice_head("Demo 2: the decision and the jump",
+                     "Requirements 3 and 5.", PURPLE,
+                     ["3 · prove who approved", "5 · name the traveler"])
+
+    nodes = [("hold for Rufus", "waits, no time limit", C_WORKFLOW, True),
+             ("workflow code", "asks for an activity", C_WORKFLOW, True),
+             ("execute jump", "an activity", CYAN, True),
+             ("arrival", "the workflow ends", OK, True)]
+    track, centers, nw = _slice_track(nodes, TRACK_Y)
+    s += track
+    above, top, _ = _stack(centers[0], TRACK_Y - 34, [(1, "workflow_audit", C_WORKFLOW)],
+                           "WORKFLOW INBOUND", up=True)
+    s += above + _leader(centers[0], TRACK_Y - 34, TRACK_Y - 4, C_WORKFLOW)
+    s += _activity_stacks(centers[1], centers[2], 2)
+    return s
+
+
+# Not a scripted run. Everything stays lit so the board is a menu: the room picks what it
+# wants to see next and the presenter drives it live off this slide.
+def img_demo_more():
     return demo_card(
-        title="Demo 1: run a cleared mission, and act for the traveler",
-        subtitle="Requirements 1, 2 and 5. Bill is cleared for this mission, and the booth "
-                 "travels as Bill.",
-        accent=OK,
-        terms=["1 · only real travelers", "2 · cleared missions only",
-               "5 · name the traveler"],
-        reached=6, skip={3},
-        states={k: ("off" if k == "workflow_audit" else "on") for k in _BADGES},
-        stop_note=None)
-
-
-def img_demo2():
-    return demo_card(
-        title="Demo 2: refuse a mission the traveler is not cleared for",
-        subtitle="Requirements 1 and 2, enforced before the request leaves our own process.",
-        accent=WARN,
-        terms=["1 · only real travelers", "2 · cleared missions only"],
-        reached=1,
-        states={"client_auth": "gate"},
-        stop_note="refused here. No workflow, no Action, nothing in Temporal")
-
-
-def img_demo3():
-    return demo_card(
-        title="Demo 3: see what happened on a trip, in seconds",
-        subtitle="Requirements 1 and 4. One id ties every step of that trip together, "
-                 "and every trip is searchable.",
+        title="Additional demos",
+        subtitle="Every hook is on the board.",
         accent=CYAN,
-        terms=["1 · only real travelers", "4 · see what happened on a trip"],
-        reached=6, skip={3},
-        states={k: ("off" if k == "workflow_audit" else "on") for k in _BADGES},
-        stop_note=None)
-
-
-def img_demo4():
-    return demo_card(
-        title="Demo 4: prove who approved a questionable trip",
-        subtitle="Requirements 1 and 3. The trip waits for Rufus, and the record says "
-                 "who released it and when.",
-        accent=PURPLE,
-        terms=["1 · only real travelers", "3 · prove who approved",
-               "5 · name the traveler"],
+        terms=_ALL_TERMS,
         reached=6,
         states={k: "on" for k in _BADGES},
         stop_note=None)
@@ -1467,41 +1644,6 @@ def img_demo4():
 # ---------------------------------------------------------------------------
 # The close
 # ---------------------------------------------------------------------------
-
-
-def img_14_what_shipped():
-    s = head()
-    s += slide_title("What Rufus shipped",
-                     "Six business requirements met. The original workflow, unchanged.", accent=OK)
-
-    tiles = [("6", "requirements", "met in the right place", OK),
-             ("7", "files", "six interceptors, and the activity one of them needs", CYAN),
-             ("2", "wiring points", "the client tier, and the worker", PURPLE),
-             ("0", "auth decisions in workflow.py", "it reads who; it never checks", WARN)]
-    for i, (big, label, sub, color) in enumerate(tiles):
-        cx = 96 + i * 274
-        s += panel(cx, 196, 250, 196, accent=color, fill=PANEL, r=14, fill_op=0.85)
-        s += f'<rect x="{cx}" y="196" width="4" height="196" rx="2" fill="{color}"/>\n'
-        s += text(cx + 125, 296, big, size=66, anchor="middle", weight=700, fill=color,
-                  mono=True)
-        s += text(cx + 125, 332, label, size=18, anchor="middle", weight=700)
-        for j, ln in enumerate(wrap(sub, 26)):
-            s += text(cx + 125, 358 + j * 20, ln, size=13, anchor="middle", fill=MUTED)
-
-    s += panel(96, 424, 1088, 140, accent=WARN, fill=PANEL, r=14, fill_op=0.6)
-    s += text(120, 462, "THE QUESTION TO TAKE TO THE FUTURE", size=14, fill=WARN,
-              weight=700, spacing=1.4)
-    s += text(120, 504, "What cross-cutting requirements do your customers have that "
-                        "interceptors could meet,", size=23, fill=INK)
-    s += text(120, 534, "instead of copying code into every workflow or paying for extra "
-                        "billable Actions?", size=23, fill=INK)
-
-    s += rufus(300, 686, scale=1.15, guitar=True)
-    s += bill(420, 686, scale=1.0)
-    s += ted(510, 686, scale=1.0)
-    s += text(600, 668, "Six requirements. Seven files. One workflow that never mentions "
-                        "any of them.", size=19, fill=OK)
-    return s
 
 
 def img_15_questions():
@@ -1549,16 +1691,14 @@ IMAGES = {
     "07-middleware": img_07_middleware,
     "08-five-categories": img_08_five_categories,
     "09-how-to-build": img_09_how_to_build,
-    "10-should-it-be-an-interceptor": img_10_should_it_be,
+    "10-activity-headers": img_10_activity_headers,
     "11-terms-to-interceptors": img_11_terms_to_interceptors,
-    "12-one-booking-six": img_12_one_booking,
     "13-other-systems": img_13_other_systems,
-    "14-what-shipped": img_14_what_shipped,
     "15-questions": img_15_questions,
-    "demo1-premium-approved": img_demo1,
-    "demo2-not-entitled": img_demo2,
-    "demo3-clean-trip": img_demo3,
-    "demo4-impostors": img_demo4,
+    "demo1-client": img_demo1_client,
+    "demo2-workflow-opens": img_demo2_workflow_opens,
+    "demo3-decision": img_demo3_decision,
+    "demo4-additional-demos": img_demo_more,
 }
 
 
